@@ -9,7 +9,7 @@ package chess;
 public class ChessBoard {
 
     public ChessBoard() {
-        
+        this.board = new int[8][8];
     }
 
     /**
@@ -24,13 +24,15 @@ public class ChessBoard {
 
     /**
      * Gets a chess piece on the chessboard
-     *
+     *>
      * @param position The position to get the piece from
      * @return Either the piece at the position, or null if no piece is at that
      * position
      */
     public ChessPiece getPiece(ChessPosition position) {
-        throw new RuntimeException("Not implemented");
+        int x = position.row - 1;
+        int y = position.col - 1;
+        return this.board[x][y];
     }
 
     /**
