@@ -8,6 +8,8 @@ package chess;
  */
 public class ChessBoard {
 
+    private final int[][] board;
+
     public ChessBoard() {
         this.board = new int[8][8];
     }
@@ -30,8 +32,8 @@ public class ChessBoard {
      * position
      */
     public ChessPiece getPiece(ChessPosition position) {
-        int x = position.row - 1;
-        int y = position.col - 1;
+        int x = position.getRow() - 1;
+        int y = position.getColumn() - 1;
         return this.board[x][y];
     }
 
