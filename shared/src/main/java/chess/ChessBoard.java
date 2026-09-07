@@ -11,7 +11,7 @@ public class ChessBoard {
     private final int[][] board;
 
     public ChessBoard() {
-        this.board = new int[8][8];
+        this.board = new ChessPiece[8][8];
     }
 
     /**
