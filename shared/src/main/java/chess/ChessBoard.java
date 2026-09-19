@@ -1,4 +1,6 @@
 package chess;
+import chess.ChessGame.TeamColor;
+import chess.ChessPiece.PieceType;
 
 /**
  * A chessboard that can hold and rearrange chess pieces.
@@ -8,7 +10,7 @@ package chess;
  */
 public class ChessBoard {
 
-    private final ChessPiece[][] board;
+    private ChessPiece[][] board;
 
     public ChessBoard() {
         this.board = new ChessPiece[8][8];
@@ -23,7 +25,7 @@ public class ChessBoard {
     public void addPiece(ChessPosition position, ChessPiece piece) {
         int row = position.getRow();
         int col = position.getColumn();
-        this.board[row][col] = piece;
+        this.board[row-1][col-1] = piece;
     }
 
     /**
@@ -48,12 +50,12 @@ public class ChessBoard {
 
         for (int i = 1; i <= 8; i++) {
             ChessPosition pos = new ChessPosition(2, i);
-            ChessPiece piece = ChessPiece(TeamColor.WHITE, PieceType.PAWN);
+            ChessPiece piece = new ChessPiece(TeamColor.WHITE, PieceType.PAWN);
             this.addPiece(pos, piece);
         }
         for (int i = 1; i <=8; i++) {
             ChessPosition pos = new ChessPosition(7, i);
-            ChessPiece piece = ChessPiece(TeamColor.BLACK, PieceType.PAWN);
+            ChessPiece piece = new ChessPiece(TeamColor.BLACK, PieceType.PAWN);
             this.addPiece(pos, piece);
         }
 
