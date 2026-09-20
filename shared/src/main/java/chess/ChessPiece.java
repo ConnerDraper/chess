@@ -173,9 +173,9 @@ public class ChessPiece {
         }
         else if (this.type == PieceType.KING) {
             int[][] directions = {
-                {-1, 1}, {0, 1}, {1, 1},
-                {-1, 0},         {1, 0},
-                {1, -1}, {0, -1}, {1, -1}
+                {-1, 1},  {0, 1},  {1, 1},
+                {-1, 0},           {1, 0},
+                {-1, -1}, {0, -1}, {1, -1}
             };
             moves = getMovesForDirections(board, myPosition, directions, false);
         }

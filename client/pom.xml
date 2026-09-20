@@ -10,9 +10,13 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>shared</artifactId>
+    <artifactId>client</artifactId>
 
     <dependencies>
+        <dependency>
+            <groupId>edu.byu.cs240</groupId>
+            <artifactId>shared</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
