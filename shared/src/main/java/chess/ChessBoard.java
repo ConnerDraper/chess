@@ -35,9 +35,7 @@ public class ChessBoard {
      * @return Either the piece at the position, or null if no piece is at that
      * position
      */
-    public ChessPiece getPiece(ChessPosition position) {
-        int x = position.getRow() - 1;
-        int y = position.getColumn() - 1;
+    public ChessPiece getPiece(int x, int y) {
         return this.board[x][y];
     }
 

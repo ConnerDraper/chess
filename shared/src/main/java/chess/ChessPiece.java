@@ -101,10 +101,9 @@ public class ChessPiece {
                 ChessPiece takenPiece = board.getPiece(row + forward, column + 1);
                 if ((takenPiece != null) && (takenPiece.getTeamColor() != this.getTeamColor())) {
                     ChessPosition newPosition = new ChessPosition(row + forward, column + 1);
-                    ChessMove m = new ChessMove(myPosition, newPosition, null);
                     if (row + forward == promotionRow) {
-                        for (ChessPiece p : PieceType.values()) {
-                            if (p != PieceType.PAWN) {
+                        for (PieceType p : PieceType.values()) {
+                            if ((p != PieceType.PAWN) && (p != PieceType.KING)) {
                                 ChessMove m = new ChessMove(myPosition, newPosition, p);
                                 moves.add(m);
                             }
@@ -117,12 +116,12 @@ public class ChessPiece {
                 }
             }
             if (column != 1) {
-                if (board.getPiece(row + forward, column - 1) != null) {
+                ChessPiece takenPiece = board.getPiece(row + forward, column - 1);
+                if ((takenPiece != null) && (takenPiece.getTeamColor() != this.getTeamColor())) {
                     ChessPosition newPosition = new ChessPosition(row + forward, column - 1);
-                    ChessMove m = new ChessMove(myPosition, newPosition, null);
                     if (row + forward == promotionRow) {
-                        for (ChessPiece p : PieceType.values()) {
-                            if (p != PieceType.PAWN) {
+                        for (PieceType p : PieceType.values()) {
+                            if ((p != PieceType.PAWN) && (p != PieceType.KING)) {
                                 ChessMove m = new ChessMove(myPosition, newPosition, p);
                                 moves.add(m);
                             }
@@ -139,11 +138,12 @@ public class ChessPiece {
             if (this.getTeamColor() == TeamColor.WHITE) {startingRow = 2;}
             else {startingRow = 7;}
 
-            if (myPosition.getRow() == startingRow()) {
+            if (myPosition.getRow() == startingRow) {
                 if ((board.getPiece(row + forward, column) == null) && 
                     (board.getPiece(row + (2 * forward), column) == null)) {
                         ChessPosition doubleForward = new ChessPosition(row + (2 * forward), column);
                         ChessMove m = new ChessMove(myPosition, doubleForward, null);
+                        moves.add(m);
                 }
             }
         }
