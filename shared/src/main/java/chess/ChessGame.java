@@ -11,7 +11,7 @@ import java.util.Collection;
 public class ChessGame {
     
     private ChessBoard board;
-    private Teamcolor teamTurn;
+    private TeamColor teamTurn;
 
     public ChessGame() {
         this.board = new ChessBoard();
