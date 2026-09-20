@@ -1,5 +1,6 @@
 package chess;
 import chess.ChessGame.TeamColor;
+import chess.ChessPiece.PieceType;
 
 import java.util.Collection;
 import java.util.ArrayList;
@@ -12,10 +13,10 @@ import java.util.ArrayList;
  */
 public class ChessPiece {
 
-    private final ChessGame.TeamColor pieceColor;
-    private ChessPiece.PieceType type;
+    private final TeamColor pieceColor;
+    private PieceType type;
 
-    public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
+    public ChessPiece(TeamColor pieceColor, PieceType type) {
         this.pieceColor = pieceColor;
         this.type = type;
     }
@@ -79,10 +80,10 @@ public class ChessPiece {
 
             // it is impossible for a pawn to be on the edge - so we don't check for it.
             // if forward space is available...
-            if (board.getPiece(row, column + forward) == null) {
-                ChessPosition forwardSpace = ChessPosition(row, column + forward);
+            if (board.getPiece(row + forward, column) == null) {
+                ChessPosition forwardSpace = ChessPosition(row + forward, column);
                 // if forward space is a promotion...
-                if (forwardSpace == promotionRow) {
+                if (row + forward == promotionRow) {
                     for (ChessPiece p : PieceType.values()) {
                         if (p != PieceType.PAWN) {
                             ChessMove m = new ChessMove(myPosition, forwardSpace, p);
@@ -98,12 +99,44 @@ public class ChessPiece {
                 }
             }
 
+            if (column != 8) {
+                if (board.getPiece(row + forward, column + 1) != null) {
+                    ChessPosition newPosition = ChessPosition(row + forward, column + 1);
+                    ChessMove m = new ChessMove(myPosition, newPosition);
+                    if (row + forward == promotionRow) {
+                        for (ChessPiece p : PieceType.values()) {
+                            if (p != PieceType.PAWN) {
+                                ChessMove m = new ChessMove(myPosition, newPosition, p);
+                                moves.add(m);
+                            }
+                    else {
+                        ChessMove m = new ChessMove(myPosition, newPosition);
+                        moves.add(m)
+                    }
+                }
+            }
+            if (column != 8) {
+                if (board.getPiece(row + forward, column - 1) != null) {
+                    ChessPosition newPosition = ChessPosition(row + forward, column - 1);
+                    ChessMove m = new ChessMove(myPosition, newPosition);
+                    if (row + forward == promotionRow) {
+                        for (ChessPiece p : PieceType.values()) {
+                            if (p != PieceType.PAWN) {
+                                ChessMove m = new ChessMove(myPosition, newPosition, p);
+                                moves.add(m);
+                            }
+                    else {
+                        ChessMove m = new ChessMove(myPosition, newPosition);
+                        moves.add(m)
+                    }
+                }
+            }
 
         }
         else if (this.type == PieceType.ROOK) {
             // positive direction of row
-            for (int i = row; i <= 8; i++) {
-                if (board.getPiece(i, column) != null) {
+            for (int i = row + 1; i <= 8; i++) {
+                if (board.getPiece(i, column) == null) {
                     ChessPosition newPosition = ChessPosition(i, column);
                     ChessMove m = new ChessMove(myPosition, newPosition);
                     moves.add(m);
@@ -119,7 +152,7 @@ public class ChessPiece {
             }
 
             // negative direction of row
-            for (int i = row; i >= 1; i--) {
+            for (int i = row - 1; i >= 1; i--) {
                 if (board.getPiece(i, column) != null) {
                     ChessPosition newPosition = ChessPosition(i, column);
                     ChessMove m = new ChessMove(myPosition, newPosition);
@@ -136,7 +169,7 @@ public class ChessPiece {
             }
 
             // positive direction of column
-            for (int i = column; i <= 8; i++) {
+            for (int i = column + 1; i <= 8; i++) {
                 if (board.getPiece(row, i) != null) {
                     ChessPosition newPosition = ChessPosition(row, i);
                     ChessMove m = new ChessMove(myPosition, newPosition);
@@ -153,7 +186,7 @@ public class ChessPiece {
             }
 
             // negative direction of column
-            for (int i = column; i >= 1; i--) {
+            for (int i = column - 1; i >= 1; i--) {
                 if (board.getPiece(row, i) != null) {
                     ChessPosition newPosition = ChessPosition(row, i);
                     ChessMove m = new ChessMove(myPosition, newPosition);
