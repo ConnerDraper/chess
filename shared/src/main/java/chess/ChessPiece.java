@@ -175,9 +175,9 @@ public class ChessPiece {
             int[][] directions = {
                 {-1, 1}, {0, 1}, {1, 1},
                 {-1, 0},         {1, 0},
-                {-1, 1}, {0, -1}, {1, -1}
+                {1, -1}, {0, -1}, {1, -1}
             };
-            getMovesForDirections(board, myPosition, directions, false);
+            moves = getMovesForDirections(board, myPosition, directions, false);
         }
 
     return moves;
@@ -198,21 +198,20 @@ public class ChessPiece {
             int i = row + dir[0];
             int j = column + dir[1];
 
-            if (repeat) {
-                while (i >= 1 && i <= 8 && j >= 1 && j <=8) {
-                    ChessPiece otherPiece = board.getPiece(i, j);
-                    ChessPosition newPosition = new ChessPosition(i, j);
-                    ChessMove m = new ChessMove(myPosition, newPosition, null);
-                    if (otherPiece != null) {
-                        if (otherPiece.getTeamColor() != this.pieceColor) {
-                            moves.add(m);
-                        }
-                        break;
+            while (i >= 1 && i <= 8 && j >= 1 && j <=8) {
+                ChessPiece otherPiece = board.getPiece(i, j);
+                ChessPosition newPosition = new ChessPosition(i, j);
+                ChessMove m = new ChessMove(myPosition, newPosition, null);
+                if (otherPiece != null) {
+                    if (otherPiece.getTeamColor() != this.pieceColor) {
+                        moves.add(m);
                     }
-                    moves.add(m);
-                    i += dir[0];
-                    j += dir[1];
+                    break;
                 }
+                moves.add(m);
+                if (!repeat) break;
+                i += dir[0];
+                j += dir[1];
             }
         }
         return moves;
