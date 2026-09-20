@@ -84,13 +84,12 @@ public class ChessPiece {
                 ChessPosition forwardSpace = ChessPosition(row + forward, column);
                 // if forward space is a promotion...
                 if (row + forward == promotionRow) {
-                    for (ChessPiece p : PieceType.values()) {
-                        if (p != PieceType.PAWN) {
+                    for (PieceType p : PieceType.values()) {
+                        if ((p != PieceType.PAWN) && (p!= PieceType.KING)) {
                             ChessMove m = new ChessMove(myPosition, forwardSpace, p);
                             moves.add(m);
                         }
                     }
-
                 }
                 // if forward space is NOT a promotion...
                 else {
@@ -100,7 +99,8 @@ public class ChessPiece {
             }
 
             if (column != 8) {
-                if (board.getPiece(row + forward, column + 1) != null) {
+                ChessPiece takenPiece = board.getPiece(row + forward, column + 1);
+                if ((takenPiece != null) && (takenPiece.getTeamColor() != this.getTeamColor())) {
                     ChessPosition newPosition = ChessPosition(row + forward, column + 1);
                     ChessMove m = new ChessMove(myPosition, newPosition);
                     if (row + forward == promotionRow) {
@@ -109,13 +109,15 @@ public class ChessPiece {
                                 ChessMove m = new ChessMove(myPosition, newPosition, p);
                                 moves.add(m);
                             }
+                        }
+                    }
                     else {
                         ChessMove m = new ChessMove(myPosition, newPosition);
-                        moves.add(m)
+                        moves.add(m);
                     }
                 }
             }
-            if (column != 8) {
+            if (column != 1) {
                 if (board.getPiece(row + forward, column - 1) != null) {
                     ChessPosition newPosition = ChessPosition(row + forward, column - 1);
                     ChessMove m = new ChessMove(myPosition, newPosition);
@@ -125,13 +127,26 @@ public class ChessPiece {
                                 ChessMove m = new ChessMove(myPosition, newPosition, p);
                                 moves.add(m);
                             }
+                        }
+                    }
                     else {
                         ChessMove m = new ChessMove(myPosition, newPosition);
-                        moves.add(m)
+                        moves.add(m);
                     }
                 }
             }
+            
+            int startingRow;
+            if (this.getTeamColor() == TeamColor.WHITE) {startingRow = 2;}
+            else {startingRow = 7;}
 
+            if (myPosition.getRow() == startingRow()) {
+                if ((board.getPiece(row + forward, column) == null) && 
+                    (board.getPiece(row + (2 * forward), column) == null)) {
+                        ChessPosition doubleForward = ChessPosition(row + (2 * forward), column);
+                        ChessMove m = ChessMove(myPosition, doubleForward);
+                }
+            }
         }
         else if (this.type == PieceType.ROOK) {
             // positive direction of row
