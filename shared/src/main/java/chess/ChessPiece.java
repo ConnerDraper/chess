@@ -4,6 +4,7 @@ import chess.ChessPiece.PieceType;
 
 import java.util.Collection;
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * Represents a single chess piece
