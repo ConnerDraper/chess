@@ -31,15 +31,10 @@ public class ChessGame {
      * @param team the team whose turn it is
      */
     public void setTeamTurn(TeamColor team) {
-        if (team == teamTurn.WHITE) {
-            this.teamTurn = TeamColor.BLACK;
-        }
-        else if (team == teamTurn.BLACK) {
-            this.teamTurn = TeamColor.WHITE;
-        }
-        else {
+        if ((team != TeamColor.WHITE) && (team != TeamColor.BLACK)) {
             throw new RuntimeException("Error: teamTurn is neither WHITE nor BLACK!");
         }
+        this.teamTurn = team;
     }
 
     /**
