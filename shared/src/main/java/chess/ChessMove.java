@@ -42,4 +42,19 @@ public class ChessMove {
     public ChessPiece.PieceType getPromotionPiece() {
         return this.promotionPiece;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ChessMove that = (ChessMove) o;
+        return Objects.equals(startPosition, that.startPosition)
+            && Objects.equals(endPosition, that.endPosition)
+            && promotionPiece == that.promotionPiece;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(startPosition, endPosition, promotionPiece);
+    }
 }
