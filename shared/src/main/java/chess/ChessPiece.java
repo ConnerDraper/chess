@@ -210,21 +210,17 @@ public class ChessPiece {
             int i = row + dir[0];
             int j = column + dir[1];
 
-            while (board.getPiece(i, j) == null) {
-                ChessPosition newPosition = ChessPosition(i, j);
-                ChessMove newMove = ChessMove(myPosition, newPosition, null);
-                moves.add(newMove);
-                i += dir[0];
-                j += dir[1];
-            }
-
-            // check if we can capture the blocked space
-            if ((1 <= i) && (i <= 8) && (1 <= j) && (j <= 8)) {
-                if (board.getPiece(i, j).getTeamColor() == otherColor) {
-                    ChessPosition newPosition = ChessPosition(i, j);
-                    ChessMove newMove = ChessMove(myPosition, newPosition, null);
-                    moves.add(newMove);
+            while (i >= 1 && i <= 8 && j >= 1 && j <=8) {
+                ChessPiece otherPiece = board.getPiece(i, j);
+                ChessPosition newPosition = new ChessPosition(i, j);
+                ChessMove m = new ChessMove(myPosition, newPosition, null);
+                if (otherPiece != null) {
+                    if (otherPiece.getTeamColor() != this.pieceColor) {
+                        moves.add(m);
+                    }
+                    break;
                 }
+                moves.add(m);
             }
         }
         return moves;

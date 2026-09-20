@@ -35,8 +35,11 @@ public class ChessBoard {
      * @return Either the piece at the position, or null if no piece is at that
      * position
      */
+    public ChessPiece getPiece(ChessPosition position) {
+        return getPiece(position.getRow(), position.getColumn());
+    }
     public ChessPiece getPiece(int x, int y) {
-        return this.board[x][y];
+        return this.board[x-1][y-1];
     }
 
     /**
