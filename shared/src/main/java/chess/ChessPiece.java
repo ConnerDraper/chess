@@ -221,6 +221,8 @@ public class ChessPiece {
                     break;
                 }
                 moves.add(m);
+                i += dir[0];
+                j += dir[1];
             }
         }
         return moves;
