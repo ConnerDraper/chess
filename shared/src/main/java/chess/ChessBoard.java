@@ -14,6 +14,17 @@ public class ChessBoard {
 
     private ChessPiece[][] board;
 
+    public ChessBoard(ChessBoard other) {
+        this.board = new ChessPiece[8][8];
+        ChessPiece otherPiece;
+        for (int row = 0; row < 8; row++) {
+            for (int col = 0; col < 8; col++) {
+                otherPiece = other.getPiece(row, col);
+                this.board[row][col] = otherPiece;
+            }
+        }
+    }
+
     public ChessBoard() {
         this.board = new ChessPiece[8][8];
     }
