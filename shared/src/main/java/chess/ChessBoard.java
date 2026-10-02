@@ -19,7 +19,7 @@ public class ChessBoard {
         ChessPiece otherPiece;
         for (int row = 0; row < 8; row++) {
             for (int col = 0; col < 8; col++) {
-                otherPiece = other.getPiece(row, col);
+                otherPiece = other.getPiece(row+1, col+1);
                 this.board[row][col] = otherPiece;
             }
         }
