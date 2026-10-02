@@ -22,17 +22,12 @@ public class ChessGame {
     private boolean blackKingMoved = false;
     private boolean blackRook1Moved = false;
     private boolean blackRook8Moved = false;
+    private ChessMove lastMove = null;
 
     public ChessGame() {
         this.board = new ChessBoard();
         this.board.resetBoard();
         this.teamTurn = TeamColor.WHITE;
-        this.whiteKingMoved = whiteKingMoved;
-        this.whiteRook1Moved = whiteRook1Moved;
-        this.whiteRook8Moved = whiteRook8Moved;
-        this.blackKingMoved = blackKingMoved;
-        this.blackRook1Moved = blackRook1Moved;
-        this.blackRook8Moved = blackRook8Moved;
     }
 
     @Override
@@ -137,6 +132,7 @@ public class ChessGame {
         // update moving tracker
         updateMoveTracker(move.getStartPosition());
         updateMoveTracker(move.getEndPosition());
+        this.lastMove = move;
 
         // if no error was thrown, the move is valid
         this.makeValidMove(move, board);
@@ -265,12 +261,13 @@ public class ChessGame {
      */
     public void setBoard(ChessBoard board) {
         this.board = board;
-        private boolean whiteKingMoved = false;
-        private boolean whiteRook1Moved = false;
-        private boolean whiteRook8Moved = false;
-        private boolean blackKingMoved = false;
-        private boolean blackRook1Moved = false;
-        private boolean blackRook8Moved = false;
+        this.whiteKingMoved = false;
+        this.whiteRook1Moved = false;
+        this.whiteRook8Moved = false;
+        this.blackKingMoved = false;
+        this.blackRook1Moved = false;
+        this.blackRook8Moved = false;
+        this.lastMove = null;
     }
 
     /**
@@ -280,6 +277,25 @@ public class ChessGame {
      */
     public ChessBoard getBoard() {
         return this.board;
+    }
+
+    /**
+     * Helper functions to check if the king, rook 1, or rook 8 have moved.
+     * Helps with castling.
+     * @param teamColor
+     * @return
+     */
+    private boolean kingMoved(TeamColor teamColor) {
+        if (teamColor == TeamColor.WHITE) {return this.whiteKingMoved;}
+        else {return this.blackKingMoved;}
+    }
+    private boolean rook1Moved(TeamColor teamColor) {
+        if (teamColor == TeamColor.WHITE) {return this.whiteRook1Moved;}
+        else {return this.blackRook1Moved;}
+    }
+    private boolean rook8Moved(TeamColor teamColor) {
+        if (teamColor == TeamColor.WHITE) {return this.whiteRook8Moved;}
+        else {return this.blackRook8Moved;}
     }
 
     /**
@@ -297,6 +313,16 @@ public class ChessGame {
         if (row == 8 && col == 5) {this.blackKingMoved = true;}
         if (row == 8 && col == 1) {this.blackRook1Moved = true;}
         if (row == 8 && col == 8) {this.blackRook8Moved = true;}
+    }
+
+    private boolean canCastle(TeamColor teamColor, int rookIndex) {
+        if (kingMoved(teamColor)) {return false;}
+        if (rookIndex == 1) {
+            if (this.rook1Moved(teamColor)) {return false;}
+        }
+        if (rookIndex == 8) {
+            if (this.rook8Moved(teamColor)) {return false;}
+        }
 
 
     }
