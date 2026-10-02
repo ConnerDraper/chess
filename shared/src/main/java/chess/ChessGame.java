@@ -128,10 +128,6 @@ public class ChessGame {
      * Finds the king of a given team
      */
     public ChessPosition findKingPos(TeamColor teamColor) {
-        TeamColor otherTeam;
-        if (teamColor == TeamColor.WHITE) {otherTeam = TeamColor.BLACK;}
-        else {otherTeam = TeamColor.WHITE;}
-
         ChessPiece currPiece;
         ChessPosition kingPosition;
         for (int row = 1; row <= 8; row++) {
@@ -145,6 +141,7 @@ public class ChessGame {
                 }
             }
         }
+        return null;
     }
 
     /**
