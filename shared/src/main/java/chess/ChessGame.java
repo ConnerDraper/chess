@@ -101,7 +101,32 @@ public class ChessGame {
         ChessPiece.PieceType promotionPiece = move.getPromotionPiece();
         ChessPiece piece = board.getPiece(move.getStartPosition());
 
+        ChessPiece.PieceType myPieceType = piece.getPieceType();
+        // castling
+        if (myPieceType == ChessPiece.PieceType.KING) {
+            int gap = (endPosition.getColumn() - startPosition.getColumn());
+            if (gap == 2 || gap == -2) {
+                int row = startPosition.getRow();
+                ChessPosition rookStart;
+                ChessPosition rookEnd;
+                if (endPosition.getColumn() == 7) {
+                    rookStart = new ChessPosition(row, 8);
+                    rookEnd = new ChessPosition(row, 6);
+                    this.board.addPiece(rookEnd, board.getPiece(rookStart));
+                    this.board.addPiece(rookStart, null);
+                }
+                else {
+                    rookStart = new ChessPosition(row, 1);
+                    rookEnd = new ChessPosition(row, 4);
+                    this.board.addPiece(rookEnd, board.getPiece(rookStart));
+                    this.board.addPiece(rookStart, null);
+                }
+            }
+        }
+
+        // promotion
         if (promotionPiece != null) {piece = new ChessPiece(piece.getTeamColor(), promotionPiece);}
+
         board.addPiece(endPosition, piece);
         board.addPiece(startPosition, null);
     }
@@ -315,6 +340,13 @@ public class ChessGame {
         if (row == 8 && col == 8) {this.blackRook8Moved = true;}
     }
 
+    /**
+     * Private helper function
+     * Checks if we can castle on a given rook side (left or right / 1 or 8)
+     * @param teamColor
+     * @param rookIndex
+     * @return
+     */
     private boolean canCastle(TeamColor teamColor, int rookIndex) {
         if (kingMoved(teamColor)) {return false;}
         if (rookIndex == 1) {
@@ -323,7 +355,49 @@ public class ChessGame {
         if (rookIndex == 8) {
             if (this.rook8Moved(teamColor)) {return false;}
         }
+        int row;
+        if (teamColor == TeamColor.WHITE) {
+            row = 1;
+        }
+        else {row = 8;}
+        ChessPosition kingStart = new ChessPosition(row, 5);
 
+        // we blindly accept this as a rook because of our previous checks
+        ChessPiece rook = this.board.getPiece(row, rookIndex);
 
+        // check if currently in check
+        if (isInCheck(teamColor)) {return false;}
+
+        // check if squares between rook & king are empty
+        // check if spaces between king start & end are in check
+        int step;
+        if (rookIndex == 1) {step = -1;}
+        else {step = 1;}
+        for (int col = 5 + step; col != rookIndex; col += step) {
+            // empty check
+            if (this.board.getPiece(row, col) != null) {return false;}
+        }
+        ChessBoard hypotheticalBoard = new ChessBoard(this.board);
+        ChessMove kingMove = new ChessMove(kingStart, new ChessPosition(row, 5 + step), null);
+        makeValidMove(kingMove, hypotheticalBoard);
+        return !(isInCheck(teamColor, hypotheticalBoard));
+    }
+
+    private Collection<ChessMove> getValidCastleMoves(TeamColor teamColor) {
+        int row;
+        if (teamColor == TeamColor.WHITE) {row = 1;}
+        else {row = 8;}
+        ChessPosition kingStart = new ChessPosition(row, 5);
+        Collection<ChessMove> castleMoves = new ArrayList<>();
+
+        if (canCastle(teamColor, 1)) {
+            ChessMove kingCastleMove1 = new ChessMove(kingStart, new ChessPosition(row, 3), null);
+            castleMoves.add(kingCastleMove1);
+        }
+        if (canCastle(teamColor, 1)) {
+            ChessMove kingCastleMove8 = new ChessMove(kingStart, new ChessPosition(row, 7), null);
+            castleMoves.add(kingCastleMove8);
+        }
+        return castleMoves;
     }
 }
