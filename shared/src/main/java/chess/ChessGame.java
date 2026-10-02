@@ -1,6 +1,9 @@
 package chess;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Arrays;
+import java.util.Objects;
 
 /**
  * A class that can manage a chess game, making moves on a board
@@ -31,9 +34,6 @@ public class ChessGame {
      * @param team the team whose turn it is
      */
     public void setTeamTurn(TeamColor team) {
-        if ((team != TeamColor.WHITE) && (team != TeamColor.BLACK)) {
-            throw new RuntimeException("Error: teamTurn is neither WHITE nor BLACK!");
-        }
         this.teamTurn = team;
     }
 
@@ -53,7 +53,11 @@ public class ChessGame {
      * startPosition
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
-        throw new RuntimeException("Not implemented");
+        ChessPiece piece = this.board.getPiece(startPosition);
+        if (piece == null) {return null;}
+        else {
+            throw new RuntimeException("Not implemented");
+        }
     }
 
     /**
@@ -83,7 +87,44 @@ public class ChessGame {
      * @return True if the specified team is in checkmate
      */
     public boolean isInCheckmate(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+        TeamColor otherTeam;
+        if (teamColor == TeamColor.WHITE) {
+            otherTeam = TeamColor.BLACK;
+        }
+        else {
+            otherTeam = TeamColor.WHITE;
+        }
+
+        Collection<ChessMove> validOppMoves = new ArrayList<>();
+        Collection<ChessMove> validKingMoves = new ArrayList<>();
+        ChessPosition currKingPosition;
+        ChessPiece currPiece;
+
+        if (this.isInCheck(teamColor)) {
+            // Store all OPP valid moves
+            // Store all MY king moves
+            for (int row = 1; row <= 8; row++) {
+                for (int col = 1; col <= 8; col++) {
+                    currPiece = this.board.getPiece(row, col);
+                    if (currPiece.getTeamColor() == otherTeam) {
+                        validOppMoves.addAll(validMoves(new ChessPosition(row, col)));
+                    }
+                    else {
+                        if (currPiece.getPieceType() == ChessPiece.PieceType.KING) {
+                            currKingPosition = new ChessPosition(row, col);
+                            validKingMoves.addAll(validMoves(currKingPosition));
+                        }
+                    }
+                }
+            }
+        }
+        // For kingMove -> if not in allValidOppMoves return false;
+        for (ChessMove kingMove : validKingMoves) {
+            if (!validOppMoves.contains(kingMove)) {
+                return false;
+            }
+        }
+        return true; // otherwise: return true;
     }
 
     /**
