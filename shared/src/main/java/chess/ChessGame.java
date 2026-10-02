@@ -79,7 +79,10 @@ public class ChessGame {
         ChessPiece piece = this.board.getPiece(startPosition);
         if (piece == null) {return null;}
         Collection<ChessMove> allValidMoves = new ArrayList<>();
-        Collection<ChessMove> proposedMoves = piece.pieceMoves(this.board, startPosition);
+        Collection<ChessMove> proposedMoves = new ArrayList<>(piece.pieceMoves(this.board, startPosition));
+        if (piece.getPieceType() == ChessPiece.PieceType.KING) {
+            proposedMoves.addAll(getValidCastleMoves(piece.getTeamColor()));
+        }
         TeamColor myTeamColor = piece.getTeamColor();
 
         for (ChessMove move : proposedMoves) {
@@ -112,14 +115,14 @@ public class ChessGame {
                 if (endPosition.getColumn() == 7) {
                     rookStart = new ChessPosition(row, 8);
                     rookEnd = new ChessPosition(row, 6);
-                    this.board.addPiece(rookEnd, board.getPiece(rookStart));
-                    this.board.addPiece(rookStart, null);
+                    board.addPiece(rookEnd, board.getPiece(rookStart));
+                    board.addPiece(rookStart, null);
                 }
                 else {
                     rookStart = new ChessPosition(row, 1);
                     rookEnd = new ChessPosition(row, 4);
-                    this.board.addPiece(rookEnd, board.getPiece(rookStart));
-                    this.board.addPiece(rookStart, null);
+                    board.addPiece(rookEnd, board.getPiece(rookStart));
+                    board.addPiece(rookStart, null);
                 }
             }
         }
@@ -348,26 +351,22 @@ public class ChessGame {
      * @return
      */
     private boolean canCastle(TeamColor teamColor, int rookIndex) {
-        if (kingMoved(teamColor)) {return false;}
-        if (rookIndex == 1) {
-            if (this.rook1Moved(teamColor)) {return false;}
-        }
-        if (rookIndex == 8) {
-            if (this.rook8Moved(teamColor)) {return false;}
-        }
         int row;
-        if (teamColor == TeamColor.WHITE) {
-            row = 1;
-        }
+        if (teamColor == TeamColor.WHITE) {row = 1;}
         else {row = 8;}
-        ChessPosition kingStart = new ChessPosition(row, 5);
-
-        // we blindly accept this as a rook because of our previous checks
+        // validate if rook has moved
+        if (rookIndex == 1) {if (this.rook1Moved(teamColor)) {return false;}}
+        if (rookIndex == 8) {if (this.rook8Moved(teamColor)) {return false;}}
+        // validate of rook is null or if wrong team or if wrong piece
+        if (kingMoved(teamColor)) {return false;}
         ChessPiece rook = this.board.getPiece(row, rookIndex);
-
+        if (rook == null) {return false;}
+        else if (rook.getPieceType() != ChessPiece.PieceType.ROOK || rook.getTeamColor() != teamColor) {
+            return false;
+        }
+        ChessPosition kingStart = new ChessPosition(row, 5);
         // check if currently in check
         if (isInCheck(teamColor)) {return false;}
-
         // check if squares between rook & king are empty
         // check if spaces between king start & end are in check
         int step;
@@ -384,17 +383,20 @@ public class ChessGame {
     }
 
     private Collection<ChessMove> getValidCastleMoves(TeamColor teamColor) {
+        Collection<ChessMove> castleMoves = new ArrayList<>();
+
         int row;
         if (teamColor == TeamColor.WHITE) {row = 1;}
         else {row = 8;}
+        ChessPosition kingPosition = this.findKingPos(teamColor);
         ChessPosition kingStart = new ChessPosition(row, 5);
-        Collection<ChessMove> castleMoves = new ArrayList<>();
+        if (!Objects.equals(kingPosition, kingStart)) {return castleMoves;}
 
         if (canCastle(teamColor, 1)) {
             ChessMove kingCastleMove1 = new ChessMove(kingStart, new ChessPosition(row, 3), null);
             castleMoves.add(kingCastleMove1);
         }
-        if (canCastle(teamColor, 1)) {
+        if (canCastle(teamColor, 8)) {
             ChessMove kingCastleMove8 = new ChessMove(kingStart, new ChessPosition(row, 7), null);
             castleMoves.add(kingCastleMove8);
         }
