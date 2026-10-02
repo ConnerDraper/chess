@@ -81,7 +81,7 @@ public class ChessGame {
      * @param move chess move to perform
      * @throws InvalidMoveException if move is invalid
      */
-    public void makeMove(ChessMove move) {
+    public void makeMove(ChessMove move) throws InvalidMoveException {
         throw new RuntimeException("Not implemented");
     }
 
@@ -92,6 +92,10 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
+        return isInCheck(teamColor, this.board);
+    }
+
+    private boolean isInCheck(TeamColor teamColor, ChessBoard board) {
         ChessPosition myKingPos = findKingPos(teamColor);
         TeamColor otherTeam;
         if (teamColor == TeamColor.WHITE) {otherTeam = TeamColor.BLACK;}
@@ -105,9 +109,9 @@ public class ChessGame {
         for (int row = 1; row <= 8; row++) {
             for (int col = 1; col <= 8; col++) {
                 currPosition = new ChessPosition(row, col);
-                currPiece = this.board.getPiece(row, col);
+                currPiece = board.getPiece(row, col);
                 if (currPiece.getTeamColor() == otherTeam) {
-                    validOppMoves.addAll(currPiece.pieceMoves(this.board, currPosition));
+                    validOppMoves.addAll(currPiece.pieceMoves(board, currPosition));
                 }
             }
         }
@@ -116,11 +120,7 @@ public class ChessGame {
             endPosition = oppMove.getEndPosition();
             validOppSpaces.add(endPosition);
         }
-
-        if (validOppSpaces.contains(myKingPos)) {
-            return true;
-        }
-        return false;
+        return validOppSpaces.contains(myKingPos);
     }
 
     /**
@@ -128,6 +128,9 @@ public class ChessGame {
      * Finds the king of a given team
      */
     public ChessPosition findKingPos(TeamColor teamColor) {
+        return findKingPos(teamColor, this.board);
+    }
+    public ChessPosition findKingPos(TeamColor teamColor, ChessBoard board) {
         ChessPiece currPiece;
         ChessPosition kingPosition;
         for (int row = 1; row <= 8; row++) {
