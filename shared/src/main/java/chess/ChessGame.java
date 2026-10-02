@@ -81,7 +81,7 @@ public class ChessGame {
      * @param move chess move to perform
      * @throws InvalidMoveException if move is invalid
      */
-    public void makeMove(ChessMove move) throws InvalidMoveException {
+    public void makeMove(ChessMove move) {
         throw new RuntimeException("Not implemented");
     }
 
@@ -93,6 +93,30 @@ public class ChessGame {
      */
     public boolean isInCheck(TeamColor teamColor) {
         throw new RuntimeException("Not implemented");
+    }
+
+    /**
+     * Helper function
+     * Finds the king of a given team
+     */
+    public ChessPosition findKing(TeamColor teamColor) {
+        TeamColor otherTeam;
+        if (teamColor == TeamColor.WHITE) {otherTeam = TeamColor.BLACK;}
+        else {otherTeam = TeamColor.WHITE;}
+
+        ChessPiece currPiece;
+        ChessPosition kingPosition;
+        for (int row = 1; row <= 8; row++) {
+            for (int col = 1; col <= 8; col++) {
+                currPiece = this.board.getPiece(row, col);
+                if (currPiece.getTeamColor() == teamColor) {
+                    if (currPiece.getPieceType() == ChessPiece.PieceType.KING) {
+                        kingPosition = new ChessPosition(row, col);
+                        return kingPosition;
+                    }
+                }
+            }
+        }
     }
 
     /**
@@ -109,12 +133,11 @@ public class ChessGame {
         else {
             otherTeam = TeamColor.WHITE;
         }
+        ChessPosition myKingPosition = findKing(teamColor);
+        Collection<ChessMove> validKingMoves = validMoves(myKingPosition);
 
         Collection<ChessMove> validOppMoves = new ArrayList<>();
-        Collection<ChessMove> validKingMoves = new ArrayList<>();
-        ChessPosition currKingPosition;
         ChessPiece currPiece;
-
         if (this.isInCheck(teamColor)) {
             // Store all OPP valid moves
             // Store all MY king moves
@@ -123,12 +146,6 @@ public class ChessGame {
                     currPiece = this.board.getPiece(row, col);
                     if (currPiece.getTeamColor() == otherTeam) {
                         validOppMoves.addAll(validMoves(new ChessPosition(row, col)));
-                    }
-                    else {
-                        if (currPiece.getPieceType() == ChessPiece.PieceType.KING) {
-                            currKingPosition = new ChessPosition(row, col);
-                            validKingMoves.addAll(validMoves(currKingPosition));
-                        }
                     }
                 }
             }
