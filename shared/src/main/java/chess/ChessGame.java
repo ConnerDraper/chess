@@ -16,11 +16,23 @@ public class ChessGame {
     
     private ChessBoard board;
     private TeamColor teamTurn;
+    private boolean whiteKingMoved = false;
+    private boolean whiteRook1Moved = false;
+    private boolean whiteRook8Moved = false;
+    private boolean blackKingMoved = false;
+    private boolean blackRook1Moved = false;
+    private boolean blackRook8Moved = false;
 
     public ChessGame() {
         this.board = new ChessBoard();
         this.board.resetBoard();
         this.teamTurn = TeamColor.WHITE;
+        this.whiteKingMoved = whiteKingMoved;
+        this.whiteRook1Moved = whiteRook1Moved;
+        this.whiteRook8Moved = whiteRook8Moved;
+        this.blackKingMoved = blackKingMoved;
+        this.blackRook1Moved = blackRook1Moved;
+        this.blackRook8Moved = blackRook8Moved;
     }
 
     @Override
@@ -121,6 +133,10 @@ public class ChessGame {
         if (!allValidMoves.contains(move)) {
             throw new InvalidMoveException("Illegal move: " + move);
         }
+
+        // update moving tracker
+        updateMoveTracker(move.getStartPosition());
+        updateMoveTracker(move.getEndPosition());
 
         // if no error was thrown, the move is valid
         this.makeValidMove(move, board);
@@ -249,6 +265,12 @@ public class ChessGame {
      */
     public void setBoard(ChessBoard board) {
         this.board = board;
+        private boolean whiteKingMoved = false;
+        private boolean whiteRook1Moved = false;
+        private boolean whiteRook8Moved = false;
+        private boolean blackKingMoved = false;
+        private boolean blackRook1Moved = false;
+        private boolean blackRook8Moved = false;
     }
 
     /**
@@ -258,5 +280,24 @@ public class ChessGame {
      */
     public ChessBoard getBoard() {
         return this.board;
+    }
+
+    /**
+     * Private helper function
+     * Updates move tracker to ensure that castling is valid.
+     * @param position
+     */
+    private void updateMoveTracker(ChessPosition position) {
+        int row = position.getRow();
+        int col = position.getColumn();
+
+        if (row == 1 && col == 5) {this.whiteKingMoved = true;}
+        if (row == 1 && col == 1) {this.whiteRook1Moved = true;}
+        if (row == 1 && col == 8) {this.whiteRook8Moved = true;}
+        if (row == 8 && col == 5) {this.blackKingMoved = true;}
+        if (row == 8 && col == 1) {this.blackRook1Moved = true;}
+        if (row == 8 && col == 8) {this.blackRook8Moved = true;}
+
+
     }
 }
