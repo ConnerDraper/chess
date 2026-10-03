@@ -78,12 +78,22 @@ public class ChessGame {
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
         ChessPiece piece = this.board.getPiece(startPosition);
         if (piece == null) {return null;}
+        TeamColor myTeamColor = piece.getTeamColor();
+        ChessPiece.PieceType myPieceType = piece.getPieceType();
         Collection<ChessMove> allValidMoves = new ArrayList<>();
         Collection<ChessMove> proposedMoves = new ArrayList<>(piece.pieceMoves(this.board, startPosition));
-        if (piece.getPieceType() == ChessPiece.PieceType.KING) {
-            proposedMoves.addAll(getValidCastleMoves(piece.getTeamColor()));
+
+        if (myPieceType == ChessPiece.PieceType.KING) { // add castling to valid moves
+            proposedMoves.addAll(getValidCastleMoves(myTeamColor));
+        } else if (myPieceType == ChessPiece.PieceType.PAWN) {// add en passant to valid moves
+            ChessMove enPassantMove = getEnPassantMove(startPosition, myTeamColor);
+            if (enPassantMove != null) {
+                proposedMoves.add(enPassantMove);
+            }
         }
-        TeamColor myTeamColor = piece.getTeamColor();
+
+
+
 
         for (ChessMove move : proposedMoves) {
             ChessBoard hypotheticalBoard = new ChessBoard(board);
@@ -93,6 +103,42 @@ public class ChessGame {
             }
         }
         return allValidMoves;
+    }
+    private ChessMove getEnPassantMove(ChessPosition pawnPosition, TeamColor teamColor) {
+        if (this.lastMove == null) return null;
+
+        ChessPosition lastStart = lastMove.getStartPosition();
+        ChessPosition lastEnd = lastMove.getEndPosition();
+        ChessPiece lastPieceMoved = this.board.getPiece(lastEnd);
+
+        if (lastStart == null || lastEnd == null || lastPieceMoved == null) {
+            return null;
+        }
+
+        int lastMoveStep = lastEnd.getRow() - lastStart.getRow();
+        int columnGap = lastEnd.getColumn() - pawnPosition.getColumn();
+
+        // verify that the opponent moved their pawn two forward on the last move
+        // and is currently next to our pawn
+        boolean doubleForward = (
+                (lastPieceMoved.getPieceType() == ChessPiece.PieceType.PAWN) &&
+                (lastPieceMoved.getTeamColor() != teamColor) &&
+                ((lastMoveStep == 2) || (lastMoveStep == -2))
+        );
+        boolean nextToMe = (
+                (lastEnd.getRow() == pawnPosition.getRow()) &&
+                ((columnGap == 1) || (columnGap == -1))
+        );
+        if (!(doubleForward && nextToMe)) {return null;}
+
+        int forward;
+        if (teamColor == TeamColor.WHITE) forward = 1;
+        else forward = -1;
+        return new ChessMove(
+                pawnPosition,
+                new ChessPosition(pawnPosition.getRow() + forward, lastEnd.getColumn()),
+                null
+        );
     }
     /**
      * Private helper function
