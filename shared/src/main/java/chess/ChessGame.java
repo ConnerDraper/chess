@@ -173,6 +173,16 @@ public class ChessGame {
             }
         }
 
+        // en passant
+        if (
+            myPieceType == ChessPiece.PieceType.PAWN &&
+            startPosition.getColumn() != endPosition.getColumn() &&
+            board.getPiece(endPosition) == null
+        ) {
+            ChessPosition enPassantPos = new ChessPosition(startPosition.getRow(), endPosition.getColumn());
+            board.addPiece(enPassantPos, null);
+        }
+
         // promotion
         if (promotionPiece != null) {piece = new ChessPiece(piece.getTeamColor(), promotionPiece);}
 
