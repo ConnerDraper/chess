@@ -10,12 +10,12 @@ import java.util.HashMap;
 
 public class MemoryGameDAO implements GameDAO{
     private HashMap<Integer, model.GameData> allGames = new HashMap<>();
-    private int currentID = 0;
+    private int currentID = 1;
 
     @Override
     public void clear() throws DataAccessException {
         allGames.clear();
-        currentID = 0;
+        currentID = 1;
     }
 
     @Override
