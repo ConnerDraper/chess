@@ -4,6 +4,7 @@ import dataaccess.MemoryGameDAO;
 import dataaccess.MemoryUserDAO;
 import io.javalin.*;
 import service.DataService;
+import service.GameService;
 import service.UserService;
 
 public class Server {
@@ -13,8 +14,6 @@ public class Server {
     public Server() {
         javalin = Javalin.create(config -> config.staticFiles.add("web"));
 
-        // Register your endpoints and exception handlers here.
-
         // data access
         MemoryUserDAO userDAO = new MemoryUserDAO();
         MemoryAuthDAO authDAO = new MemoryAuthDAO();
@@ -23,9 +22,10 @@ public class Server {
         // services
         UserService userService = new UserService(userDAO, authDAO);
         DataService dataService = new DataService(userDAO, authDAO, gameDAO);
+        GameService gameService = new GameService(gameDAO, authDAO);
 
         // handler
-        Handler handler = new Handler(dataService, userService);
+        Handler handler = new Handler(dataService, userService, gameService);
         registerRoutes(handler);
     }
 
@@ -34,6 +34,9 @@ public class Server {
         javalin.post("/user", handler::handleRegister);
         javalin.post("/session", handler::handleLogin);
         javalin.delete("/session", handler::handleLogout);
+        javalin.get("/game", handler::handleListGames);
+        javalin.post("/game", handler::handleCreateGame);
+        javalin.put("/game", handler::handleJoinGame);
     }
 
     public int run(int desiredPort) {

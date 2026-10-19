@@ -9,13 +9,16 @@ public class Handler {
     private final Gson gson = new Gson();
     private final DataService dataService;
     private final UserService userService;
+    private final GameService gameService;
 
     public Handler(
             DataService dataService,
-            UserService userService
+            UserService userService,
+            GameService gameService
     ) {
         this.dataService = dataService;
         this.userService = userService;
+        this.gameService = gameService;
     }
 
     public void handleClear(Context context) {
@@ -43,6 +46,29 @@ public class Handler {
         respond(context, () -> {
             LogoutRequest logoutRequest = new LogoutRequest(context.header("authorization"));
             return userService.logout(logoutRequest);
+        });
+    }
+
+    public void handleListGames(Context context) {
+        respond(context, () -> {
+            ListGamesRequest listGamesRequest = new ListGamesRequest(context.header("authorization"));
+            return gameService.listGames(listGamesRequest);
+        });
+    }
+
+    public void handleCreateGame(Context context) {
+        respond(context, () -> {
+            CreateGameRequest body = gson.fromJson(context.body(), CreateGameRequest.class);
+            CreateGameRequest createGameRequest = new CreateGameRequest(body.gameName(), context.header("authorization"));
+            return gameService.createGame(createGameRequest);
+        });
+    }
+
+    public void handleJoinGame(Context context) {
+        respond(context, () -> {
+            JoinGameRequest body = gson.fromJson(context.body(), JoinGameRequest.class);
+            JoinGameRequest joinGameRequest = new JoinGameRequest(body.gameID(), body.playerColor(), context.header("authorization"));
+            return gameService.joinGame(joinGameRequest);
         });
     }
 
