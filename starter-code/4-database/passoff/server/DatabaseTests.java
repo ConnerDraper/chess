@@ -32,16 +32,15 @@ public class DatabaseTests {
         serverFacade = new TestServerFacade("localhost", Integer.toString(port));
     }
 
-    @BeforeEach
-    public void setUp() {
-        serverFacade.clear();
-    }
-
     @AfterAll
     static void stopServer() {
         server.stop();
     }
 
+    @BeforeEach
+    public void setUp() {
+        serverFacade.clear();
+    }
 
     @Test
     @DisplayName("Persistence Test")
@@ -166,9 +165,9 @@ public class DatabaseTests {
             while (rs.next()) {
                 for (int i = 1; i <= columns; i++) {
                     String value = rs.getString(i);
-                    if (value != null){
+                    if (value != null) {
                         Assertions.assertFalse(value.contains(TEST_USER.getPassword()),
-                            "Found clear text password in database");
+                                "Found clear text password in database");
                     }
                 }
             }
@@ -203,7 +202,7 @@ public class DatabaseTests {
     }
 
     private Class<?> findDatabaseManager() throws ClassNotFoundException {
-        if(databaseManagerClass != null) {
+        if (databaseManagerClass != null) {
             return databaseManagerClass;
         }
 
@@ -213,7 +212,8 @@ public class DatabaseTests {
                 clazz.getDeclaredMethod("getConnection");
                 databaseManagerClass = clazz;
                 return clazz;
-            } catch (ReflectiveOperationException ignored) {}
+            } catch (ReflectiveOperationException ignored) {
+            }
         }
         throw new ClassNotFoundException("Unable to load database in order to verify persistence. " +
                 "Are you using DatabaseManager to set your credentials? " +

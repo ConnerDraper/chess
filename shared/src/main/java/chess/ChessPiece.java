@@ -1,9 +1,9 @@
 package chess;
-import chess.ChessGame.TeamColor;
-import chess.ChessPiece.PieceType;
 
-import java.util.Collection;
+import chess.ChessGame.TeamColor;
+
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Objects;
 
 /**
@@ -15,23 +15,11 @@ import java.util.Objects;
 public class ChessPiece {
 
     private final TeamColor pieceColor;
-    private PieceType type;
+    private final PieceType type;
 
     public ChessPiece(TeamColor pieceColor, PieceType type) {
         this.pieceColor = pieceColor;
         this.type = type;
-    }
-
-    /**
-     * The various different chess piece options
-     */
-    public enum PieceType {
-        KING,
-        QUEEN,
-        BISHOP,
-        KNIGHT,
-        ROOK,
-        PAWN
     }
 
     /**
@@ -59,9 +47,13 @@ public class ChessPiece {
         Collection<ChessMove> moves = new ArrayList<>();
 
         TeamColor otherColor;
-        if (this.pieceColor == TeamColor.WHITE) otherColor = TeamColor.BLACK;
-        else if (this.pieceColor == TeamColor.BLACK) otherColor = TeamColor.WHITE;
-        else throw new RuntimeException("Error: no pieceColor assigned to piece!");
+        if (this.pieceColor == TeamColor.WHITE) {
+            otherColor = TeamColor.BLACK;
+        } else if (this.pieceColor == TeamColor.BLACK) {
+            otherColor = TeamColor.WHITE;
+        } else {
+            throw new RuntimeException("Error: no pieceColor assigned to piece!");
+        }
 
         int row = myPosition.getRow();
         int column = myPosition.getColumn();
@@ -72,8 +64,7 @@ public class ChessPiece {
             if (this.pieceColor == TeamColor.WHITE) {
                 forward = 1;
                 promotionRow = 8;
-            }
-            else {
+            } else {
                 forward = -1;
                 promotionRow = 1;
             }
@@ -85,7 +76,7 @@ public class ChessPiece {
                 // if forward space is a promotion...
                 if (row + forward == promotionRow) {
                     for (PieceType p : PieceType.values()) {
-                        if ((p != PieceType.PAWN) && (p!= PieceType.KING)) {
+                        if ((p != PieceType.PAWN) && (p != PieceType.KING)) {
                             ChessMove m = new ChessMove(myPosition, forwardSpace, p);
                             moves.add(m);
                         }
@@ -109,8 +100,7 @@ public class ChessPiece {
                                 moves.add(m);
                             }
                         }
-                    }
-                    else {
+                    } else {
                         ChessMove m = new ChessMove(myPosition, newPosition, null);
                         moves.add(m);
                     }
@@ -127,69 +117,66 @@ public class ChessPiece {
                                 moves.add(m);
                             }
                         }
-                    }
-                    else {
+                    } else {
                         ChessMove m = new ChessMove(myPosition, newPosition, null);
                         moves.add(m);
                     }
                 }
             }
-            
+
             int startingRow;
-            if (this.getTeamColor() == TeamColor.WHITE) {startingRow = 2;}
-            else {startingRow = 7;}
+            if (this.getTeamColor() == TeamColor.WHITE) {
+                startingRow = 2;
+            } else {
+                startingRow = 7;
+            }
 
             if (myPosition.getRow() == startingRow) {
-                if ((board.getPiece(row + forward, column) == null) && 
-                    (board.getPiece(row + (2 * forward), column) == null)) {
-                        ChessPosition doubleForward = new ChessPosition(row + (2 * forward), column);
-                        ChessMove m = new ChessMove(myPosition, doubleForward, null);
-                        moves.add(m);
+                if ((board.getPiece(row + forward, column) == null) &&
+                        (board.getPiece(row + (2 * forward), column) == null)) {
+                    ChessPosition doubleForward = new ChessPosition(row + (2 * forward), column);
+                    ChessMove m = new ChessMove(myPosition, doubleForward, null);
+                    moves.add(m);
                 }
             }
-        }
-        else if (this.type == PieceType.ROOK) {
+        } else if (this.type == PieceType.ROOK) {
             int[][] directions = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
             moves = getMovesForDirections(board, myPosition, directions, true);
-        }
-        else if (this.type == PieceType.KNIGHT) {
+        } else if (this.type == PieceType.KNIGHT) {
             int[][] directions = {
-                {1, 2}, {2, 1},
-                {1, -2}, {2, -1},
-                {-1, 2}, {-2, 1},
-                {-1, -2}, {-2, -1}
+                    {1, 2}, {2, 1},
+                    {1, -2}, {2, -1},
+                    {-1, 2}, {-2, 1},
+                    {-1, -2}, {-2, -1}
             };
             moves = getMovesForDirections(board, myPosition, directions, false);
-        }
-        else if (this.type == PieceType.BISHOP) {
+        } else if (this.type == PieceType.BISHOP) {
             int[][] directions = {{1, 1}, {1, -1}, {-1, 1}, {-1, -1}};
-            moves  = getMovesForDirections(board, myPosition, directions, true);
-        }
-        else if (this.type == PieceType.QUEEN) {
+            moves = getMovesForDirections(board, myPosition, directions, true);
+        } else if (this.type == PieceType.QUEEN) {
             int[][] directions = {
-                {1, 1}, {1, -1}, {-1, 1}, {-1, -1},
-                {1, 0}, {-1, 0}, {0, 1}, {0, -1}
+                    {1, 1}, {1, -1}, {-1, 1}, {-1, -1},
+                    {1, 0}, {-1, 0}, {0, 1}, {0, -1}
             };
             moves = getMovesForDirections(board, myPosition, directions, true);
-        }
-        else if (this.type == PieceType.KING) {
+        } else if (this.type == PieceType.KING) {
             int[][] directions = {
-                {-1, 1},  {0, 1},  {1, 1},
-                {-1, 0},           {1, 0},
-                {-1, -1}, {0, -1}, {1, -1}
+                    {-1, 1}, {0, 1}, {1, 1},
+                    {-1, 0}, {1, 0},
+                    {-1, -1}, {0, -1}, {1, -1}
             };
             moves = getMovesForDirections(board, myPosition, directions, false);
         }
 
-    return moves;
+        return moves;
     }
 
     /*
     Helper function that returns the moves for all directions.
     */
     public Collection<ChessMove> getMovesForDirections(
-        ChessBoard board, ChessPosition myPosition, 
-        int[][] directions, boolean repeat) {
+            ChessBoard board, ChessPosition myPosition,
+            int[][] directions, boolean repeat) {
         Collection<ChessMove> moves = new ArrayList<>();
 
         int row = myPosition.getRow();
@@ -199,7 +186,7 @@ public class ChessPiece {
             int i = row + dir[0];
             int j = column + dir[1];
 
-            while (i >= 1 && i <= 8 && j >= 1 && j <=8) {
+            while (i >= 1 && i <= 8 && j >= 1 && j <= 8) {
                 ChessPiece otherPiece = board.getPiece(i, j);
                 ChessPosition newPosition = new ChessPosition(i, j);
                 ChessMove m = new ChessMove(myPosition, newPosition, null);
@@ -210,17 +197,24 @@ public class ChessPiece {
                     break;
                 }
                 moves.add(m);
-                if (!repeat) break;
+                if (!repeat) {
+                    break;
+                }
                 i += dir[0];
                 j += dir[1];
             }
         }
         return moves;
     }
+
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         ChessPiece that = (ChessPiece) o;
         return pieceColor == that.pieceColor && type == that.type;
     }
@@ -228,6 +222,18 @@ public class ChessPiece {
     @Override
     public int hashCode() {
         return Objects.hash(pieceColor, type);
+    }
+
+    /**
+     * The various different chess piece options
+     */
+    public enum PieceType {
+        KING,
+        QUEEN,
+        BISHOP,
+        KNIGHT,
+        ROOK,
+        PAWN
     }
 
 }

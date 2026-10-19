@@ -1,10 +1,12 @@
 package service;
-import java.util.UUID;
+
 import dataaccess.AuthDAO;
 import dataaccess.DataAccessException;
 import dataaccess.UserDAO;
 import model.AuthData;
 import model.UserData;
+
+import java.util.UUID;
 
 public class UserService {
     private final UserDAO userDAO;
@@ -16,6 +18,10 @@ public class UserService {
     ) {
         this.userDAO = userDAO;
         this.authDAO = authDAO;
+    }
+
+    private static String generateToken() {
+        return UUID.randomUUID().toString();
     }
 
     public RegisterResult register(
@@ -32,7 +38,9 @@ public class UserService {
 
         // see if username is already taken
         UserData userData = userDAO.getUser(username);
-        if (userData != null) throw new AlreadyTakenException("already taken");
+        if (userData != null) {
+            throw new AlreadyTakenException("already taken");
+        }
 
         // create user after checks
         userData = new UserData(username, password, email);
@@ -72,7 +80,9 @@ public class UserService {
 
         // no auth
         AuthData authData = authDAO.getAuth(authToken);
-        if (authData == null) throw new UnauthorizedException("unauthorized");
+        if (authData == null) {
+            throw new UnauthorizedException("unauthorized");
+        }
 
         authDAO.deleteAuth(authToken);
         return new LogoutResult();
@@ -82,9 +92,5 @@ public class UserService {
         String authToken = generateToken();
         authDAO.createAuth(new AuthData(authToken, username));
         return authToken;
-    }
-
-    private static String generateToken() {
-        return UUID.randomUUID().toString();
     }
 }

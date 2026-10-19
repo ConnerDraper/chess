@@ -4,12 +4,11 @@ import chess.ChessGame;
 import model.GameData;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 
-import java.util.HashMap;
-
-public class MemoryGameDAO implements GameDAO{
-    private HashMap<Integer, model.GameData> allGames = new HashMap<>();
+public class MemoryGameDAO implements GameDAO {
+    private final HashMap<Integer, model.GameData> allGames = new HashMap<>();
     private int currentID = 1;
 
     @Override

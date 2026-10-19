@@ -1,21 +1,15 @@
 package service;
 
-import dataaccess.GameDAO;
-import dataaccess.MemoryGameDAO;
-import dataaccess.AuthDAO;
-import dataaccess.MemoryAuthDAO;
-import dataaccess.UserDAO;
-import dataaccess.MemoryUserDAO;
-
+import dataaccess.*;
 import model.AuthData;
 import model.UserData;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 class DataServiceTest {
     private GameDAO gameDAO;

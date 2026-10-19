@@ -1,8 +1,9 @@
 package server;
+
 import dataaccess.MemoryAuthDAO;
 import dataaccess.MemoryGameDAO;
 import dataaccess.MemoryUserDAO;
-import io.javalin.*;
+import io.javalin.Javalin;
 import service.DataService;
 import service.GameService;
 import service.UserService;
