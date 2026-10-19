@@ -1,14 +1,14 @@
 package service;
+import java.util.UUID;
 import dataaccess.AuthDAO;
 import dataaccess.DataAccessException;
-import dataaccess.GameDAO;
 import dataaccess.UserDAO;
 import model.AuthData;
 import model.UserData;
 
 public class UserService {
-    private UserDAO userDAO;
-    private AuthDAO authDAO;
+    private final UserDAO userDAO;
+    private final AuthDAO authDAO;
 
     public UserService(
             UserDAO userDAO,
@@ -20,12 +20,71 @@ public class UserService {
 
     public RegisterResult register(
             RegisterRequest registerRequest
-    ) throws BadRequestException, AlreadyTakenException {
-        if ((registerRequest.username() == null) ||
-            (registerRequest.password() == null) ||
-            (registerRequest.email() == null)) {throw BadRequestException;}
+    ) throws DataAccessException, BadRequestException, AlreadyTakenException {
+        String username = registerRequest.username();
+        String password = registerRequest.password();
+        String email = registerRequest.email();
+
+        // check for null information so we don't get an error when we check
+        if ((username == null) || (password == null) || (email == null)) {
+            throw new BadRequestException("Error: bad request.");
+        }
+
+        // see if username is already taken
+        UserData userData = userDAO.getUser(username);
+        if (userData != null) throw new AlreadyTakenException("Error: already taken.");
+
+        // create user after checks
+        userData = new UserData(username, password, email);
+        userDAO.createUser(userData);
+        // create authToken and register
+        String authToken = createAuth(username);
+
+        return new RegisterResult(username, authToken);
     }
-    public LoginResult login(LoginRequest loginRequest) {}
-    public void logout(LogoutRequest logoutRequest) {}
+
+    public LoginResult login(
+            LoginRequest loginRequest
+    ) throws DataAccessException, BadRequestException, UnauthorizedException {
+        String username = loginRequest.username();
+        String password = loginRequest.password();
+
+        // check for null information so we don't get an error when we check
+        if ((username == null) || (password == null)) {
+            throw new BadRequestException("Error: bad request.");
+        }
+
+        // see if user does not exist
+        UserData userData = userDAO.getUser(username);
+        if (userData == null || !(password.equals(userData.password()))) {
+            throw new UnauthorizedException("Error: unauthorized.");
+        }
+
+        // get login result
+        String authToken = createAuth(username);
+        return new LoginResult(username, authToken);
+    }
+
+    public LogoutResult logout(
+            LogoutRequest logoutRequest
+    ) throws DataAccessException, UnauthorizedException {
+        String authToken = logoutRequest.authToken();
+
+        // no auth
+        AuthData authData = authDAO.getAuth(authToken);
+        if (authData == null) throw new UnauthorizedException("Error: unauthorized.");
+
+        authDAO.deleteAuth(authToken);
+        return new LogoutResult();
+    }
+
+    private String createAuth(String username) throws DataAccessException {
+        String authToken = generateToken();
+        authDAO.createAuth(new AuthData(authToken, username));
+        return authToken;
+    }
+
+    private static String generateToken() {
+        return UUID.randomUUID().toString();
+    }
 }
-*
