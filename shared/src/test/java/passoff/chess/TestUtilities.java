@@ -9,14 +9,6 @@ import java.util.List;
 import java.util.Map;
 
 public class TestUtilities {
-    private static final Map<Character, ChessPiece.PieceType> CHAR_TO_TYPE_MAP = Map.of(
-            'p', ChessPiece.PieceType.PAWN,
-            'n', ChessPiece.PieceType.KNIGHT,
-            'r', ChessPiece.PieceType.ROOK,
-            'q', ChessPiece.PieceType.QUEEN,
-            'k', ChessPiece.PieceType.KING,
-            'b', ChessPiece.PieceType.BISHOP);
-
     public static void validateMoves(String boardText, ChessPosition startPosition, int[][] endPositions) {
         var board = loadBoard(boardText);
         var testPiece = board.getPiece(startPosition);
@@ -39,6 +31,15 @@ public class TestUtilities {
 
         Assertions.assertEquals(expected, actual, "Wrong moves");
     }
+
+
+    private static final Map<Character, ChessPiece.PieceType> CHAR_TO_TYPE_MAP = Map.of(
+            'p', ChessPiece.PieceType.PAWN,
+            'n', ChessPiece.PieceType.KNIGHT,
+            'r', ChessPiece.PieceType.ROOK,
+            'q', ChessPiece.PieceType.QUEEN,
+            'k', ChessPiece.PieceType.KING,
+            'b', ChessPiece.PieceType.BISHOP);
 
     public static ChessBoard loadBoard(String boardText) {
         var board = new ChessBoard();
@@ -94,7 +95,7 @@ public class TestUtilities {
     }
 
     private static int moveToInt(ChessMove move) {
-        return 1000 * positionToInt(move.startPosition()) + 10 * positionToInt(move.endPosition()) +
-                ((move.promotionPiece() != null) ? move.promotionPiece().ordinal() + 1 : 0);
+        return 1000 * positionToInt(move.getStartPosition()) + 10 * positionToInt(move.getEndPosition()) +
+                ((move.getPromotionPiece() != null) ? move.getPromotionPiece().ordinal() + 1 : 0);
     }
 }

@@ -32,7 +32,6 @@ public abstract class EqualsTestingUtility<T> {
     }
 
     protected abstract T buildOriginal();
-
     protected abstract Collection<T> buildAllDifferent();
 
 
