@@ -1,4 +1,6 @@
 package service;
 
-public record ListGamesResult() {
+public record ListGamesResult(
+        int gameID
+) {
 }
