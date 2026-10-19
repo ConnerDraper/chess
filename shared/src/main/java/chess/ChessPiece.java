@@ -83,6 +83,7 @@ public class ChessPiece {
     /**
      * Helper function: Pawn moves
      * Pawns don't move like the other pieces, so they get their own method
+     *
      * @param board
      * @param myPosition
      * @return Collection of pawn moves
@@ -138,6 +139,7 @@ public class ChessPiece {
     /**
      * Helper function: Add pawn move
      * Keeps pieceMoves from being too large of a method
+     *
      * @param moves
      * @param start
      * @param end
