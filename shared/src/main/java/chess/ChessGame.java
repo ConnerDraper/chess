@@ -306,18 +306,15 @@ public class ChessGame {
     private boolean hasValidMoves(TeamColor teamColor) {
         ChessPosition currPosition;
         ChessPiece currPiece;
-        Collection<ChessMove> currValidMoves;
         for (int row = 1; row <= 8; row++) {
             for (int col = 1; col <= 8; col++) {
                 currPosition = new ChessPosition(row, col);
                 currPiece = this.board.getPiece(row, col);
-                if (currPiece != null) {
-                    if (currPiece.getTeamColor() == teamColor) {
-                        currValidMoves = this.validMoves(currPosition);
-                        if (!currValidMoves.isEmpty()) {
-                            return true;
-                        }
-                    }
+                if (currPiece == null) {
+                    continue;
+                }
+                if ((currPiece.getTeamColor() == teamColor) && (!this.validMoves(currPosition).isEmpty())) {
+                    return true;
                 }
             }
         }

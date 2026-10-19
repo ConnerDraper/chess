@@ -46,99 +46,8 @@ public class ChessPiece {
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
         Collection<ChessMove> moves = new ArrayList<>();
 
-        TeamColor otherColor;
-        if (this.pieceColor == TeamColor.WHITE) {
-            otherColor = TeamColor.BLACK;
-        } else if (this.pieceColor == TeamColor.BLACK) {
-            otherColor = TeamColor.WHITE;
-        } else {
-            throw new RuntimeException("Error: no pieceColor assigned to piece!");
-        }
-
-        int row = myPosition.getRow();
-        int column = myPosition.getColumn();
-
         if (this.type == PieceType.PAWN) {
-            int forward;
-            int promotionRow;
-            if (this.pieceColor == TeamColor.WHITE) {
-                forward = 1;
-                promotionRow = 8;
-            } else {
-                forward = -1;
-                promotionRow = 1;
-            }
-
-            // it is impossible for a pawn to be on the edge - so we don't check for it.
-            // if forward space is available...
-            if (board.getPiece(row + forward, column) == null) {
-                ChessPosition forwardSpace = new ChessPosition(row + forward, column);
-                // if forward space is a promotion...
-                if (row + forward == promotionRow) {
-                    for (PieceType p : PieceType.values()) {
-                        if ((p != PieceType.PAWN) && (p != PieceType.KING)) {
-                            ChessMove m = new ChessMove(myPosition, forwardSpace, p);
-                            moves.add(m);
-                        }
-                    }
-                }
-                // if forward space is NOT a promotion...
-                else {
-                    ChessMove m = new ChessMove(myPosition, forwardSpace, null);
-                    moves.add(m);
-                }
-            }
-
-            if (column != 8) {
-                ChessPiece takenPiece = board.getPiece(row + forward, column + 1);
-                if ((takenPiece != null) && (takenPiece.getTeamColor() != this.getTeamColor())) {
-                    ChessPosition newPosition = new ChessPosition(row + forward, column + 1);
-                    if (row + forward == promotionRow) {
-                        for (PieceType p : PieceType.values()) {
-                            if ((p != PieceType.PAWN) && (p != PieceType.KING)) {
-                                ChessMove m = new ChessMove(myPosition, newPosition, p);
-                                moves.add(m);
-                            }
-                        }
-                    } else {
-                        ChessMove m = new ChessMove(myPosition, newPosition, null);
-                        moves.add(m);
-                    }
-                }
-            }
-            if (column != 1) {
-                ChessPiece takenPiece = board.getPiece(row + forward, column - 1);
-                if ((takenPiece != null) && (takenPiece.getTeamColor() != this.getTeamColor())) {
-                    ChessPosition newPosition = new ChessPosition(row + forward, column - 1);
-                    if (row + forward == promotionRow) {
-                        for (PieceType p : PieceType.values()) {
-                            if ((p != PieceType.PAWN) && (p != PieceType.KING)) {
-                                ChessMove m = new ChessMove(myPosition, newPosition, p);
-                                moves.add(m);
-                            }
-                        }
-                    } else {
-                        ChessMove m = new ChessMove(myPosition, newPosition, null);
-                        moves.add(m);
-                    }
-                }
-            }
-
-            int startingRow;
-            if (this.getTeamColor() == TeamColor.WHITE) {
-                startingRow = 2;
-            } else {
-                startingRow = 7;
-            }
-
-            if (myPosition.getRow() == startingRow) {
-                if ((board.getPiece(row + forward, column) == null) &&
-                        (board.getPiece(row + (2 * forward), column) == null)) {
-                    ChessPosition doubleForward = new ChessPosition(row + (2 * forward), column);
-                    ChessMove m = new ChessMove(myPosition, doubleForward, null);
-                    moves.add(m);
-                }
-            }
+            moves = pawnMoves(board, myPosition);
         } else if (this.type == PieceType.ROOK) {
             int[][] directions = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
             moves = getMovesForDirections(board, myPosition, directions, true);
@@ -169,6 +78,82 @@ public class ChessPiece {
         }
 
         return moves;
+    }
+
+    /**
+     * Helper function: Pawn moves
+     * Pawns don't move like the other pieces, so they get their own method
+     * @param board
+     * @param myPosition
+     * @return Collection of pawn moves
+     */
+    private Collection<ChessMove> pawnMoves(ChessBoard board, ChessPosition myPosition) {
+        Collection<ChessMove> moves = new ArrayList<>();
+
+        int row = myPosition.getRow();
+        int column = myPosition.getColumn();
+
+        int forward;
+        int promotionRow;
+        int startingRow;
+        if (this.pieceColor == TeamColor.WHITE) {
+            forward = 1;
+            promotionRow = 8;
+            startingRow = 2;
+        } else {
+            forward = -1;
+            promotionRow = 1;
+            startingRow = 7;
+        }
+
+        // it is impossible for a pawn to be on the edge - so we don't check for it.
+        // if forward space is available...
+        if (board.getPiece(row + forward, column) == null) {
+            ChessPosition forwardSpace = new ChessPosition(row + forward, column);
+            addPawnMove(moves, myPosition, forwardSpace, promotionRow);
+
+            // if pawn hasn't moved yet and the space two ahead is also available...
+            if ((row == startingRow) && (board.getPiece(row + (2 * forward), column) == null)) {
+                ChessPosition doubleForward = new ChessPosition(row + (2 * forward), column);
+                moves.add(new ChessMove(myPosition, doubleForward, null));
+            }
+        }
+
+        // check both diagonals for an enemy piece to take
+        for (int side : new int[]{1, -1}) {
+            int newColumn = column + side;
+            if ((newColumn < 1) || (newColumn > 8)) {
+                continue;
+            }
+            ChessPiece takenPiece = board.getPiece(row + forward, newColumn);
+            if ((takenPiece != null) && (takenPiece.getTeamColor() != this.pieceColor)) {
+                ChessPosition newPosition = new ChessPosition(row + forward, newColumn);
+                addPawnMove(moves, myPosition, newPosition, promotionRow);
+            }
+        }
+
+        return moves;
+    }
+
+    /**
+     * Helper function: Add pawn move
+     * Keeps pieceMoves from being too large of a method
+     * @param moves
+     * @param start
+     * @param end
+     * @param promotionRow
+     */
+    private void addPawnMove(Collection<ChessMove> moves, ChessPosition start,
+                             ChessPosition end, int promotionRow) {
+        if (end.getRow() != promotionRow) {
+            moves.add(new ChessMove(start, end, null));
+            return;
+        }
+        for (PieceType piece : PieceType.values()) {
+            if ((piece != PieceType.PAWN) && (piece != PieceType.KING)) {
+                moves.add(new ChessMove(start, end, piece));
+            }
+        }
     }
 
     /*
