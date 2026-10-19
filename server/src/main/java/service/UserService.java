@@ -5,6 +5,15 @@ import dataaccess.DataAccessException;
 import dataaccess.UserDAO;
 import model.AuthData;
 import model.UserData;
+import service.exception.AlreadyTakenException;
+import service.exception.BadRequestException;
+import service.exception.UnauthorizedException;
+import service.request.LoginRequest;
+import service.request.LogoutRequest;
+import service.request.RegisterRequest;
+import service.result.LoginResult;
+import service.result.LogoutResult;
+import service.result.RegisterResult;
 
 import java.util.UUID;
 

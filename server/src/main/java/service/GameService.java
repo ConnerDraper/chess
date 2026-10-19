@@ -5,6 +5,15 @@ import dataaccess.DataAccessException;
 import dataaccess.GameDAO;
 import model.AuthData;
 import model.GameData;
+import service.exception.AlreadyTakenException;
+import service.exception.BadRequestException;
+import service.exception.UnauthorizedException;
+import service.request.CreateGameRequest;
+import service.request.JoinGameRequest;
+import service.request.ListGamesRequest;
+import service.result.CreateGameResult;
+import service.result.JoinGameResult;
+import service.result.ListGamesResult;
 
 public class GameService {
     private final GameDAO gameDAO;

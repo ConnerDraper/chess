@@ -4,6 +4,15 @@ import dataaccess.*;
 import model.GameData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import service.exception.AlreadyTakenException;
+import service.exception.BadRequestException;
+import service.exception.UnauthorizedException;
+import service.request.CreateGameRequest;
+import service.request.JoinGameRequest;
+import service.request.ListGamesRequest;
+import service.request.RegisterRequest;
+import service.result.CreateGameResult;
+import service.result.ListGamesResult;
 
 import static org.junit.jupiter.api.Assertions.*;
 

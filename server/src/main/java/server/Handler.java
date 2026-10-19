@@ -3,6 +3,10 @@ package server;
 import com.google.gson.Gson;
 import io.javalin.http.Context;
 import service.*;
+import service.exception.AlreadyTakenException;
+import service.exception.BadRequestException;
+import service.exception.UnauthorizedException;
+import service.request.*;
 
 import java.util.Map;
 import java.util.concurrent.Callable;
