@@ -27,12 +27,12 @@ public class UserService {
 
         // check for null information so we don't get an error when we check
         if ((username == null) || (password == null) || (email == null)) {
-            throw new BadRequestException("Error: bad request.");
+            throw new BadRequestException("bad request");
         }
 
         // see if username is already taken
         UserData userData = userDAO.getUser(username);
-        if (userData != null) throw new AlreadyTakenException("Error: already taken.");
+        if (userData != null) throw new AlreadyTakenException("already taken");
 
         // create user after checks
         userData = new UserData(username, password, email);
@@ -51,13 +51,13 @@ public class UserService {
 
         // check for null information so we don't get an error when we check
         if ((username == null) || (password == null)) {
-            throw new BadRequestException("Error: bad request.");
+            throw new BadRequestException("bad request");
         }
 
         // see if user does not exist
         UserData userData = userDAO.getUser(username);
         if (userData == null || !(password.equals(userData.password()))) {
-            throw new UnauthorizedException("Error: unauthorized.");
+            throw new UnauthorizedException("unauthorized");
         }
 
         // get login result
@@ -72,7 +72,7 @@ public class UserService {
 
         // no auth
         AuthData authData = authDAO.getAuth(authToken);
-        if (authData == null) throw new UnauthorizedException("Error: unauthorized.");
+        if (authData == null) throw new UnauthorizedException("unauthorized");
 
         authDAO.deleteAuth(authToken);
         return new LogoutResult();
