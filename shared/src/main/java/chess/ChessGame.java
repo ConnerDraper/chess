@@ -126,12 +126,7 @@ public class ChessGame {
             return null;
         }
 
-        int forward;
-        if (teamColor == TeamColor.WHITE) {
-            forward = 1;
-        } else {
-            forward = -1;
-        }
+        int forward = (teamColor == TeamColor.WHITE) ? 1 : -1;
         return new ChessMove(
                 pawnPosition,
                 new ChessPosition(pawnPosition.getRow() + forward, lastEnd.getColumn()),
@@ -239,12 +234,7 @@ public class ChessGame {
 
     private boolean isInCheck(TeamColor teamColor, ChessBoard board) {
         ChessPosition myKingPos = findKingPos(teamColor, board);
-        TeamColor otherTeam;
-        if (teamColor == TeamColor.WHITE) {
-            otherTeam = TeamColor.BLACK;
-        } else {
-            otherTeam = TeamColor.WHITE;
-        }
+        TeamColor otherTeam = (teamColor == TeamColor.WHITE) ? TeamColor.BLACK : TeamColor.WHITE;
 
         Collection<ChessMove> validOppMoves = new ArrayList<>();
         Collection<ChessPosition> validOppSpaces = new ArrayList<>();
@@ -381,27 +371,15 @@ public class ChessGame {
      * @return
      */
     private boolean kingMoved(TeamColor teamColor) {
-        if (teamColor == TeamColor.WHITE) {
-            return this.whiteKingMoved;
-        } else {
-            return this.blackKingMoved;
-        }
+        return (teamColor == TeamColor.WHITE) ? this.whiteKingMoved : this.blackKingMoved;
     }
 
     private boolean rook1Moved(TeamColor teamColor) {
-        if (teamColor == TeamColor.WHITE) {
-            return this.whiteRook1Moved;
-        } else {
-            return this.blackRook1Moved;
-        }
+        return (teamColor == TeamColor.WHITE) ? this.whiteRook1Moved : this.blackRook1Moved;
     }
 
     private boolean rook8Moved(TeamColor teamColor) {
-        if (teamColor == TeamColor.WHITE) {
-            return this.whiteRook8Moved;
-        } else {
-            return this.blackRook8Moved;
-        }
+        return (teamColor == TeamColor.WHITE) ? this.whiteRook8Moved : this.blackRook8Moved;
     }
 
     /**
@@ -443,12 +421,7 @@ public class ChessGame {
      * @return
      */
     private boolean canCastle(TeamColor teamColor, int rookIndex) {
-        int row;
-        if (teamColor == TeamColor.WHITE) {
-            row = 1;
-        } else {
-            row = 8;
-        }
+        int row = (teamColor == TeamColor.WHITE) ? 1 : 8;
         // validate if rook has moved
         if (rookIndex == 1) {
             if (this.rook1Moved(teamColor)) {
@@ -477,12 +450,7 @@ public class ChessGame {
         }
         // check if squares between rook & king are empty
         // check if spaces between king start & end are in check
-        int step;
-        if (rookIndex == 1) {
-            step = -1;
-        } else {
-            step = 1;
-        }
+        int step = (rookIndex == 1) ? -1 : 1;
         for (int col = 5 + step; col != rookIndex; col += step) {
             // empty check
             if (this.board.getPiece(row, col) != null) {
@@ -497,13 +465,8 @@ public class ChessGame {
 
     private Collection<ChessMove> getValidCastleMoves(TeamColor teamColor) {
         Collection<ChessMove> castleMoves = new ArrayList<>();
+        int row = (teamColor == TeamColor.WHITE) ? 1 : 8;
 
-        int row;
-        if (teamColor == TeamColor.WHITE) {
-            row = 1;
-        } else {
-            row = 8;
-        }
         ChessPosition kingPosition = this.findKingPos(teamColor);
         ChessPosition kingStart = new ChessPosition(row, 5);
         if (!Objects.equals(kingPosition, kingStart)) {
