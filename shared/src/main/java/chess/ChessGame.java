@@ -100,8 +100,8 @@ public class ChessGame {
             return null;
         }
 
-        ChessPosition lastStart = lastMove.startPosition();
-        ChessPosition lastEnd = lastMove.endPosition();
+        ChessPosition lastStart = lastMove.getStartPosition();
+        ChessPosition lastEnd = lastMove.getEndPosition();
         ChessPiece lastPieceMoved = this.board.getPiece(lastEnd);
 
         if (lastStart == null || lastEnd == null || lastPieceMoved == null) {
@@ -144,10 +144,10 @@ public class ChessGame {
      * Makes a move that has already been confirmed as valid.
      */
     private void makeValidMove(ChessMove move, ChessBoard board) {
-        ChessPosition startPosition = move.startPosition();
-        ChessPosition endPosition = move.endPosition();
-        ChessPiece.PieceType promotionPiece = move.promotionPiece();
-        ChessPiece piece = board.getPiece(move.startPosition());
+        ChessPosition startPosition = move.getStartPosition();
+        ChessPosition endPosition = move.getEndPosition();
+        ChessPiece.PieceType promotionPiece = move.getPromotionPiece();
+        ChessPiece piece = board.getPiece(move.getStartPosition());
 
         ChessPiece.PieceType myPieceType = piece.getPieceType();
         // castling
@@ -197,14 +197,14 @@ public class ChessGame {
      * @throws InvalidMoveException if move is invalid
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
-        ChessPiece piece = board.getPiece(move.startPosition());
+        ChessPiece piece = board.getPiece(move.getStartPosition());
         if (piece == null) {
-            throw new InvalidMoveException("Piece is null at " + move.startPosition());
+            throw new InvalidMoveException("Piece is null at " + move.getStartPosition());
         }
         TeamColor myTeamColor = piece.getTeamColor();
         TeamColor currentTurn = this.getTeamTurn();
-        ChessPosition myStartPosition = move.startPosition();
-        ChessPosition myEndPosition = move.endPosition();
+        ChessPosition myStartPosition = move.getStartPosition();
+        ChessPosition myEndPosition = move.getEndPosition();
         if (myTeamColor != currentTurn) {
             throw new InvalidMoveException("It is not the turn of " + myTeamColor);
         }
@@ -214,8 +214,8 @@ public class ChessGame {
         }
 
         // update moving tracker
-        updateMoveTracker(move.startPosition());
-        updateMoveTracker(move.endPosition());
+        updateMoveTracker(move.getStartPosition());
+        updateMoveTracker(move.getEndPosition());
         this.lastMove = move;
 
         // if no error was thrown, the move is valid
@@ -265,7 +265,7 @@ public class ChessGame {
         }
         ChessPosition endPosition;
         for (ChessMove oppMove : validOppMoves) {
-            endPosition = oppMove.endPosition();
+            endPosition = oppMove.getEndPosition();
             validOppSpaces.add(endPosition);
         }
         return validOppSpaces.contains(myKingPos);
