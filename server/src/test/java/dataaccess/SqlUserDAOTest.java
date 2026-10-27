@@ -1,19 +1,19 @@
 package dataaccess;
 
-import dataaccess.mysql.MySqlUserDAO;
+import dataaccess.sql.SqlUserDAO;
 import model.UserData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class MySqlUserDAOTest {
+class SqlUserDAOTest {
     private UserDAO userDAO;
     private UserData userData;
 
     @BeforeEach
     void setUp() throws Exception {
-        userDAO = new MySqlUserDAO();
+        userDAO = new SqlUserDAO();
         userDAO.clear();
         userData = new UserData("username", "password", "email@email.com");
     }

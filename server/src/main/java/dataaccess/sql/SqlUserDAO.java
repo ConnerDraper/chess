@@ -1,4 +1,4 @@
-package dataaccess.mysql;
+package dataaccess.sql;
 
 import dataaccess.DataAccessException;
 import dataaccess.DatabaseManager;
@@ -10,8 +10,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class MySqlUserDAO extends MySqlDAO implements UserDAO {
-    public MySqlUserDAO() throws DataAccessException {
+public class SqlUserDAO extends SqlDAO implements UserDAO {
+    public SqlUserDAO() throws DataAccessException {
         super("""
                 CREATE TABLE IF NOT EXISTS users (
                     username VARCHAR(255) NOT NULL,

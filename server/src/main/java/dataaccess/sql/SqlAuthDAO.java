@@ -1,4 +1,4 @@
-package dataaccess.mysql;
+package dataaccess.sql;
 
 import dataaccess.AuthDAO;
 import dataaccess.DataAccessException;
@@ -10,8 +10,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class MySqlAuthDAO extends MySqlDAO implements AuthDAO {
-    public MySqlAuthDAO() throws DataAccessException {
+public class SqlAuthDAO extends SqlDAO implements AuthDAO {
+    public SqlAuthDAO() throws DataAccessException {
         super("""
                 CREATE TABLE IF NOT EXISTS auths (
                     authToken VARCHAR(255) NOT NULL,

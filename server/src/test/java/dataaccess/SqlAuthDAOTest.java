@@ -1,6 +1,6 @@
 package dataaccess;
 
-import dataaccess.mysql.MySqlAuthDAO;
+import dataaccess.sql.SqlAuthDAO;
 import model.AuthData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,13 +11,13 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 
-class MySqlAuthDAOTest {
+class SqlAuthDAOTest {
     private AuthDAO authDAO;
     private AuthData authData;
 
     @BeforeEach
     void setUp() throws Exception {
-        authDAO = new MySqlAuthDAO();
+        authDAO = new SqlAuthDAO();
         authDAO.clear();
         authData = new AuthData("authToken", "username");
     }

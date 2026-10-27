@@ -4,9 +4,9 @@ import dataaccess.AuthDAO;
 import dataaccess.DataAccessException;
 import dataaccess.GameDAO;
 import dataaccess.UserDAO;
-import dataaccess.mysql.MySqlAuthDAO;
-import dataaccess.mysql.MySqlGameDAO;
-import dataaccess.mysql.MySqlUserDAO;
+import dataaccess.sql.SqlAuthDAO;
+import dataaccess.sql.SqlGameDAO;
+import dataaccess.sql.SqlUserDAO;
 
 import io.javalin.Javalin;
 import service.DataService;
@@ -25,9 +25,9 @@ public class Server {
         AuthDAO authDAO;
         GameDAO gameDAO;
         try {
-            userDAO = new MySqlUserDAO();
-            authDAO = new MySqlAuthDAO();
-            gameDAO = new MySqlGameDAO();
+            userDAO = new SqlUserDAO();
+            authDAO = new SqlAuthDAO();
+            gameDAO = new SqlGameDAO();
         } catch (DataAccessException exception) {
             throw new RuntimeException("Could not set up database", exception);
         }

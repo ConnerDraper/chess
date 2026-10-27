@@ -1,4 +1,4 @@
-package dataaccess.mysql;
+package dataaccess.sql;
 
 import dataaccess.DataAccessException;
 import dataaccess.DatabaseManager;
@@ -10,8 +10,8 @@ import java.sql.SQLException;
 /**
  * Abstract base class for SQL Data Access Objects
  */
-public abstract class MySqlDAO {
-    MySqlDAO(String statement) throws DataAccessException {
+public abstract class SqlDAO {
+    SqlDAO(String statement) throws DataAccessException {
         createTable(statement);
     }
 

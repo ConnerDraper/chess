@@ -1,4 +1,4 @@
-package dataaccess.mysql;
+package dataaccess.sql;
 
 import chess.ChessGame;
 import com.google.gson.Gson;
@@ -15,11 +15,11 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class MySqlGameDAO extends MySqlDAO implements GameDAO {
+public class SqlGameDAO extends SqlDAO implements GameDAO {
     // converts ChessGame objects to and from JSON text, since MySQL can't store Java objects
     private final Gson gson = new Gson();
 
-    public MySqlGameDAO() throws DataAccessException {
+    public SqlGameDAO() throws DataAccessException {
         // whiteUsername and blackUsername can be NULL until a player joins
         super("""
                 CREATE TABLE IF NOT EXISTS games (

@@ -1,6 +1,6 @@
 package dataaccess;
 
-import dataaccess.mysql.MySqlGameDAO;
+import dataaccess.sql.SqlGameDAO;
 import model.GameData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,12 +11,12 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class MySqlGameDAOTest {
+class SqlGameDAOTest {
     private GameDAO gameDAO;
 
     @BeforeEach
     void setUp() throws Exception {
-        gameDAO = new MySqlGameDAO();
+        gameDAO = new SqlGameDAO();
         gameDAO.clear();
     }
 
