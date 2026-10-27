@@ -1,8 +1,13 @@
 package server;
 
-import dataaccess.memory.MemoryAuthDAO;
-import dataaccess.memory.MemoryGameDAO;
-import dataaccess.memory.MemoryUserDAO;
+import dataaccess.AuthDAO;
+import dataaccess.DataAccessException;
+import dataaccess.GameDAO;
+import dataaccess.UserDAO;
+import dataaccess.mysql.MySqlAuthDAO;
+import dataaccess.mysql.MySqlGameDAO;
+import dataaccess.mysql.MySqlUserDAO;
+
 import io.javalin.Javalin;
 import service.DataService;
 import service.GameService;
@@ -16,9 +21,16 @@ public class Server {
         javalin = Javalin.create(config -> config.staticFiles.add("web"));
 
         // data access
-        MemoryUserDAO userDAO = new MemoryUserDAO();
-        MemoryAuthDAO authDAO = new MemoryAuthDAO();
-        MemoryGameDAO gameDAO = new MemoryGameDAO();
+        UserDAO userDAO;
+        AuthDAO authDAO;
+        GameDAO gameDAO;
+        try {
+            userDAO = new MySqlUserDAO();
+            authDAO = new MySqlAuthDAO();
+            gameDAO = new MySqlGameDAO();
+        } catch (DataAccessException exception) {
+            throw new RuntimeException("Could not set up database", exception);
+        }
 
         // services
         UserService userService = new UserService(userDAO, authDAO);
