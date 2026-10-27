@@ -17,6 +17,8 @@ import service.result.RegisterResult;
 
 import java.util.UUID;
 
+import org.mindrot.jbcrypt.BCrypt;
+
 public class UserService {
     private final UserDAO userDAO;
     private final AuthDAO authDAO;
@@ -51,8 +53,9 @@ public class UserService {
             throw new AlreadyTakenException("already taken");
         }
 
-        // create user after checks
-        userData = new UserData(username, password, email);
+        // create user w/ hashed pass after checks
+        String hash = BCrypt.hashpw(password, BCrypt.gensalt());
+        userData = new UserData(username, hash, email);
         userDAO.createUser(userData);
         // create authToken and register
         String authToken = createAuth(username);
@@ -71,9 +74,9 @@ public class UserService {
             throw new BadRequestException("bad request");
         }
 
-        // see if user does not exist
+        // see if user does not exist, or the password doesn't match the stored hash
         UserData userData = userDAO.getUser(username);
-        if (userData == null || !(password.equals(userData.password()))) {
+        if (userData == null || !BCrypt.checkpw(password, userData.password())) {
             throw new UnauthorizedException("unauthorized");
         }
 
