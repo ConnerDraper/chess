@@ -107,7 +107,19 @@ public class ChessRepl {
     }
 
     private void register(String[] words) throws Exception {
+        if (words.length != 4) {
+            System.out.println("Error. Correct usage: register <username> <password> <email>");
+            return;
+        }
+
+        AuthData auth = facade.register(words[1], words[2], words[3]);
+        authToken = auth.authToken();
+        username = auth.username();
+
+        System.out.println("Successfully registered " + username);
+        printHint("Try 'create <name>' to create a game, or 'help' to see valid commands.");
     }
+
 
     private void login(String[] words) throws Exception {
     }
