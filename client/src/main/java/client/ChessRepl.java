@@ -145,8 +145,16 @@ public class ChessRepl {
         printHint("Type 'login' to sign back in, or 'quit' to leave.");
     }
 
-
     private void createGame(String[] words) throws Exception {
+        if (words.length != 2) {
+            System.out.println("Error. Correct usage: create <name>");
+            return;
+        }
+
+        facade.createGame(authToken, words[1]);
+
+        System.out.println("Created game " + words[1]);
+        printHint("Type 'list' to find it.");
     }
 
     private void listGames() throws Exception {
