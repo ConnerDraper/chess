@@ -90,7 +90,22 @@ public class ChessRepl {
     }
 
     private void showHelp() {
+        if (authToken == null) {
+            System.out.println("register <username> <password> <email> | Make a new account");
+            System.out.println("login <username> <password>            | Logs in");
+            System.out.println("quit                                   | Self-explanatory");
+            System.out.println("help                                   | Shows valid commands");
+        } else {
+            System.out.println("create <name>                   | Creates a new game");
+            System.out.println("list                            | Shows all games");
+            System.out.println("join <number> <WHITE or BLACK>  | Joins a game");
+            System.out.println("observe <number>                | Spectates a game");
+            System.out.println("logout <number>                 | Logs out");
+            System.out.println("quit                            | Self-explanatory");
+            System.out.println("help                            | Shows valid commands");
+        }
     }
+
 
     private void register(String[] words) throws Exception {
     }
