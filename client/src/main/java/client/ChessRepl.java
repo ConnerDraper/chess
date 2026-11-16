@@ -106,7 +106,6 @@ public class ChessRepl {
         }
     }
 
-
     private void register(String[] words) throws Exception {
     }
 
@@ -137,7 +136,9 @@ public class ChessRepl {
     }
 
     private void printHint(String hint) {
+        System.out.println(SET_TEXT_FAINT + "  " + hint + RESET_TEXT_BOLD_FAINT);
     }
+
 
     private void printBoardTitle(String gameName, String role) {
     }
