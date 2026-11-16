@@ -186,9 +186,31 @@ public class ChessRepl {
         printHint("Type 'join <number> <WHITE or BLACK>' to play, or 'observe <number>' to watch.");
     }
 
-
     private void joinGame(String[] words) throws Exception {
+        if (words.length != 3) {
+            System.out.println("Error. Correct usage: join <number> <WHITE or BLACK>");
+            return;
+        }
+
+        GameData game = pickGame(words[1]);
+        if (game == null) {
+            return;
+        }
+
+        String color = words[2].toUpperCase();
+        if (!color.equals("WHITE") && !color.equals("BLACK")) {
+            System.out.println("Error. Color must be WHITE or BLACK.");
+            return;
+        }
+
+        facade.joinGame(authToken, color, game.gameID());
+
+        ChessBoard board = new ChessBoard();
+        board.resetBoard();
+        printBoardTitle(game.gameName(), color);
+        BoardRenderer.drawBoard(board, color.equals("WHITE"));
     }
+
 
     private void observeGame(String[] words) {
     }
