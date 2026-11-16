@@ -100,7 +100,7 @@ public class ChessRepl {
             System.out.println("list                            | Shows all games");
             System.out.println("join <number> <WHITE or BLACK>  | Joins a game");
             System.out.println("observe <number>                | Spectates a game");
-            System.out.println("logout <number>                 | Logs out");
+            System.out.println("logout                          | Logs out");
             System.out.println("quit                            | Self-explanatory");
             System.out.println("help                            | Shows valid commands");
         }
@@ -138,7 +138,6 @@ public class ChessRepl {
     private void printHint(String hint) {
         System.out.println(SET_TEXT_FAINT + "  " + hint + RESET_TEXT_BOLD_FAINT);
     }
-
 
     private void printBoardTitle(String gameName, String role) {
     }
