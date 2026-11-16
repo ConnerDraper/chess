@@ -11,21 +11,13 @@ import java.net.http.HttpResponse;
 import java.util.List;
 
 public class ServerFacade {
-    private String url;
-    private HttpClient http = HttpClient.newHttpClient();
-    private Gson gson = new Gson();
+    private final String url;
+    private final HttpClient http = HttpClient.newHttpClient();
+    private final Gson gson = new Gson();
 
     public ServerFacade(int port) {
         url = "http://localhost:" + port;
     }
-
-    private record ErrorMessage(String message) {}
-    private record RegisterBody(String username, String password, String email) {}
-    private record LoginBody(String username, String password) {}
-    private record CreateGameBody(String gameName) {}
-    private record CreateGameReply(int gameID) {}
-    private record JoinGameBody(String playerColor, int gameID) {}
-    private record ListGamesReply(List<GameData> games) {}
 
     private String sendRequest(String method, String path, Object body, String authToken) throws Exception {
         String jsonBody = "";
@@ -88,6 +80,27 @@ public class ServerFacade {
 
     public void clear() throws Exception {
         sendRequest("DELETE", "/db", null, null);
+    }
+
+    private record ErrorMessage(String message) {
+    }
+
+    private record RegisterBody(String username, String password, String email) {
+    }
+
+    private record LoginBody(String username, String password) {
+    }
+
+    private record CreateGameBody(String gameName) {
+    }
+
+    private record CreateGameReply(int gameID) {
+    }
+
+    private record JoinGameBody(String playerColor, int gameID) {
+    }
+
+    private record ListGamesReply(List<GameData> games) {
     }
 
 }

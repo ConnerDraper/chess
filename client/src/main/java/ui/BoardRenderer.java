@@ -9,8 +9,14 @@ import static ui.EscapeSequences.*;
 
 public class BoardRenderer {
 
-    private static final String[] FILES = {" \u200Aa\u2003", " \u200Ab\u2003", " \u200Ac\u2003", " \u200Ad\u2003", " \u200Ae\u2003", " \u200Af\u2003", " \u200Ag\u2003", " \u200Ah\u2003"};
-    private static final String[] RANKS = {" \u200A1\u2003", " \u200A2\u2003", " \u200A3\u2003", " \u200A4\u2003", " \u200A5\u2003", " \u200A6\u2003", " \u200A7\u2003", " \u200A8\u2003"};
+    private static final String[] FILES = {
+            " \u200Aa\u2003", " \u200Ab\u2003", " \u200Ac\u2003", " \u200Ad\u2003",
+            " \u200Ae\u2003", " \u200Af\u2003", " \u200Ag\u2003", " \u200Ah\u2003"
+    };
+    private static final String[] RANKS = {
+            " \u200A1\u2003", " \u200A2\u2003", " \u200A3\u2003", " \u200A4\u2003",
+            " \u200A5\u2003", " \u200A6\u2003", " \u200A7\u2003", " \u200A8\u2003"
+    };
 
     private static final String[] WHITE_PIECES = {WHITE_KING, WHITE_QUEEN, WHITE_BISHOP, WHITE_KNIGHT, WHITE_ROOK, WHITE_PAWN};
     private static final String[] BLACK_PIECES = {BLACK_KING, BLACK_QUEEN, BLACK_BISHOP, BLACK_KNIGHT, BLACK_ROOK, BLACK_PAWN};

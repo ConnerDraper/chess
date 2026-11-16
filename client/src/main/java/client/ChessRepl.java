@@ -13,8 +13,8 @@ import static ui.EscapeSequences.*;
 
 public class ChessRepl {
 
-    private ServerFacade facade;
-    private Scanner scanner = new Scanner(System.in);
+    private final ServerFacade facade;
+    private final Scanner scanner = new Scanner(System.in);
     private String authToken = null;
     private String username = null;
     private List<GameData> savedGames = new ArrayList<>();
