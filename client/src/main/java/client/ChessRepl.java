@@ -224,5 +224,7 @@ public class ChessRepl {
     }
 
     private void printBoardTitle(String gameName, String role) {
+        System.out.println(SET_TEXT_BOLD + "Game: " + gameName + " | You are " + role + RESET_TEXT_BOLD_FAINT);
     }
+
 }
