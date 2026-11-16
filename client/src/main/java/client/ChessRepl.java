@@ -171,6 +171,9 @@ public class ChessRepl {
     }
 
     private String yourGameMarker(GameData game) {
+        if (username.equals(game.whiteUsername()) || username.equals(game.blackUsername())) {
+            return " ★";
+        }
         return "";
     }
 
