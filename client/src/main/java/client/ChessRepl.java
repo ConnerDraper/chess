@@ -194,8 +194,23 @@ public class ChessRepl {
     }
 
     private GameData pickGame(String number) {
-        return null;
+        int gameNumber;
+        try {
+            gameNumber = Integer.parseInt(number);
+        } catch (Exception e) {
+            System.out.println("Error. Invalid number: " + number);
+            return null;
+        }
+
+        if (gameNumber < 1 || gameNumber > savedGames.size()) {
+            System.out.println("Error. There is no game with number " + gameNumber);
+            printHint("Type 'list' to see the games.");
+            return null;
+        }
+
+        return savedGames.get(gameNumber - 1);
     }
+
 
     private String yourGameMarker(GameData game) {
         if (username.equals(game.whiteUsername()) || username.equals(game.blackUsername())) {
