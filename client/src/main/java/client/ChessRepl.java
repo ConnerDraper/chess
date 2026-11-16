@@ -120,9 +120,20 @@ public class ChessRepl {
         printHint("Try 'create <name>' to create a game, or 'help' to see valid commands.");
     }
 
-
     private void login(String[] words) throws Exception {
+        if (words.length != 3) {
+            System.out.println("Error. Correct usage: login <username> <password>");
+            return;
+        }
+
+        AuthData auth = facade.login(words[1], words[2]);
+        authToken = auth.authToken();
+        username = auth.username();
+
+        System.out.println("Welcome, " + username);
+        printHint("Type 'list' to see games, or 'help' to see everything.");
     }
+
 
     private void logout() throws Exception {
     }
