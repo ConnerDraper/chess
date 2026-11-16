@@ -49,11 +49,7 @@ public class ChessRepl {
                         loggedInMenu(command, words);
                     }
                 } catch (Exception e) {
-                    if (e.getMessage() == null) {
-                        System.out.println("Can't reach the chess server right now. Make sure it's running.");
-                    } else {
-                        System.out.println("Something went wrong: " + e.getMessage());
-                    }
+                    System.out.println(friendlyError(e.getMessage()));
                 }
             }
         }
@@ -260,6 +256,26 @@ public class ChessRepl {
 
     private void printBoardTitle(String gameName, String role) {
         System.out.println(SET_TEXT_BOLD + "Game: " + gameName + " | You are " + role + RESET_TEXT_BOLD_FAINT);
+    }
+
+    private String friendlyError(String serverMessage) {
+        if (serverMessage == null) {
+            return "Can't reach the chess server right now. Make sure it's running.";
+        } else if (serverMessage.contains("unauthorized")) {
+            if (authToken == null) {
+                return "Wrong username or password.";
+            }
+            return "You're not allowed to do that. Try logging out and back in.";
+        } else if (serverMessage.contains("already taken")) {
+            if (authToken == null) {
+                return "That username is already taken. Try a different one.";
+            }
+            return "That color is already taken in this game. Try the other color or a different game.";
+        } else if (serverMessage.contains("bad request")) {
+            return "Something about that input wasn't right. Type 'help' to check the format.";
+        } else {
+            return "Something went wrong. Please try again.";
+        }
     }
 
 }
