@@ -211,8 +211,21 @@ public class ChessRepl {
         BoardRenderer.drawBoard(board, color.equals("WHITE"));
     }
 
-
     private void observeGame(String[] words) {
+        if (words.length != 2) {
+            System.out.println("Error. Correct usage: observe <number>");
+            return;
+        }
+
+        GameData game = pickGame(words[1]);
+        if (game == null) {
+            return;
+        }
+
+        ChessBoard board = new ChessBoard();
+        board.resetBoard();
+        printBoardTitle(game.gameName(), "observing");
+        BoardRenderer.drawBoard(board, true);
     }
 
     private GameData pickGame(String number) {
