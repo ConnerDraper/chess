@@ -134,9 +134,17 @@ public class ChessRepl {
         printHint("Type 'list' to see games, or 'help' to see everything.");
     }
 
-
     private void logout() throws Exception {
+        facade.logout(authToken);
+
+        System.out.println("Goodbye, " + username);
+        authToken = null;
+        username = null;
+        savedGames = new ArrayList<>();
+
+        printHint("Type 'login' to sign back in, or 'quit' to leave.");
     }
+
 
     private void createGame(String[] words) throws Exception {
     }
