@@ -179,8 +179,8 @@ public class ChessRepl {
                 blackUser = "open";
             }
 
-            System.out.println((i + 1) + ") " + game.gameName()
-                    + whiteUser + " vs. " + blackUser));
+            System.out.println((i + 1) + ") " + game.gameName() + ": "
+                    + whiteUser + " vs. " + blackUser + yourGameMarker(game));
         }
 
         printHint("Type 'join <number> <WHITE or BLACK>' to play, or 'observe <number>' to watch.");
