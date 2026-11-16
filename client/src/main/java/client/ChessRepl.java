@@ -158,7 +158,34 @@ public class ChessRepl {
     }
 
     private void listGames() throws Exception {
+        savedGames = facade.listGames(authToken);
+
+        if (savedGames.isEmpty()) {
+            System.out.println("No games to list.");
+            printHint("Type 'create <name>' to make one.");
+            return;
+        }
+
+        for (int i = 0; i < savedGames.size(); i++) {
+            GameData game = savedGames.get(i);
+
+            String whiteUser = game.whiteUsername();
+            if (whiteUser == null) {
+                whiteUser = "open";
+            }
+
+            String blackUser = game.blackUsername();
+            if (blackUser == null) {
+                blackUser = "open";
+            }
+
+            System.out.println((i + 1) + ") " + game.gameName()
+                    + whiteUser + " vs. " + blackUser));
+        }
+
+        printHint("Type 'join <number> <WHITE or BLACK>' to play, or 'observe <number>' to watch.");
     }
+
 
     private void joinGame(String[] words) throws Exception {
     }
