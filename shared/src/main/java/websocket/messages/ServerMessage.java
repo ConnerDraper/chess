@@ -12,8 +12,8 @@ import chess.ChessGame;
 public class ServerMessage {
     ServerMessageType serverMessageType;
     private ChessGame game = null;
-    private String notification = null;
-    private String error = null;
+    private String message = null;
+    private String errorMessage = null;
 
     public ServerMessage(ServerMessageType type) {
         this.serverMessageType = type;
@@ -31,20 +31,20 @@ public class ServerMessage {
         return game;
     }
 
-    public void setNotification(String notificationMsg) {
-        this.notification = notificationMsg;
+    public void setMessage(String notificationMsg) {
+        this.message = notificationMsg;
     }
 
-    public String getNotification() {
-        return notification;
+    public String getMessage() {
+        return message;
     }
 
-    public void setError(String errorMsg) {
-        this.error = errorMsg;
+    public void setErrorMessage(String errorMsg) {
+        this.errorMessage = errorMsg;
     }
 
-    public String getError() {
-        return error;
+    public String getErrorMessage() {
+        return errorMessage;
     }
 
     @Override
