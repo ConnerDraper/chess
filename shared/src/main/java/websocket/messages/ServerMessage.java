@@ -1,6 +1,7 @@
 package websocket.messages;
 
 import java.util.Objects;
+import chess.ChessGame;
 
 /**
  * Represents a Message the server can send through a WebSocket
@@ -10,6 +11,9 @@ import java.util.Objects;
  */
 public class ServerMessage {
     ServerMessageType serverMessageType;
+    private ChessGame game = null;
+    private String notification = null;
+    private String error = null;
 
     public ServerMessage(ServerMessageType type) {
         this.serverMessageType = type;
@@ -17,6 +21,30 @@ public class ServerMessage {
 
     public ServerMessageType getServerMessageType() {
         return this.serverMessageType;
+    }
+
+    public void setGame(ChessGame game) {
+        this.game = game;
+    }
+
+    public ChessGame getGame() {
+        return game;
+    }
+
+    public void setNotification(String message) {
+        this.notification = message;
+    }
+
+    public String getNotification() {
+        return notification;
+    }
+
+    public void setError(String errorMessage) {
+        this.error = errorMessage;
+    }
+
+    public String getError() {
+        return error;
     }
 
     @Override
