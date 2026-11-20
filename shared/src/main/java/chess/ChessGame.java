@@ -21,6 +21,7 @@ public class ChessGame {
     private boolean blackRook1Moved = false;
     private boolean blackRook8Moved = false;
     private ChessMove lastMove = null;
+    private boolean gameOver = false;
 
     public ChessGame() {
         this.board = new ChessBoard();
@@ -482,6 +483,14 @@ public class ChessGame {
             castleMoves.add(kingCastleMove8);
         }
         return castleMoves;
+    }
+
+    public boolean isGameOver() {
+        return this.gameOver;
+    }
+
+    public void setGameOver(boolean value) {
+        this.gameOver = value;
     }
 
     /**
