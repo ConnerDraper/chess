@@ -31,16 +31,16 @@ public class ServerMessage {
         return game;
     }
 
-    public void setNotification(String message) {
-        this.notification = message;
+    public void setNotification(String notificationMsg) {
+        this.notification = notificationMsg;
     }
 
     public String getNotification() {
         return notification;
     }
 
-    public void setError(String errorMessage) {
-        this.error = errorMessage;
+    public void setError(String errorMsg) {
+        this.error = errorMsg;
     }
 
     public String getError() {
