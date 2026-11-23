@@ -39,7 +39,21 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
     public void handleMessage(WsMessageContext context) throws IOException {
         Session session = context.session;
         try {
-            ;
+            UserGameCommand command = gson.fromJson(context.message(), UserGameCommand.class);
+            AuthData authData = authDAO.getAuth(command.getAuthToken());
+            if (authData == null) {
+                throw new UnauthorizedException("unauthorized");
+            }
+            String username = authData.username();
+
+            GameData game = gameDAO.getGame(command.getGameID());
+            if (game == null) {
+                throw new BadRequestException("game does not exist");
+            }
+
+            if (command.getCommandType() == UserGameCommand.CommandType.CONNECT) {
+                connect(session, username, game);
+            }
         }
         catch (Exception error) {
             connections.send(session, errorMessage("Error: " + error.getMessage()));
