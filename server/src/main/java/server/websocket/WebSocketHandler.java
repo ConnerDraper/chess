@@ -1,15 +1,13 @@
 package server.websocket;
 
 import chess.*;
-import dataaccess.DataAccessException;
-
 import com.google.gson.Gson;
 import dataaccess.AuthDAO;
+import dataaccess.DataAccessException;
 import dataaccess.GameDAO;
 import io.javalin.websocket.*;
 import model.AuthData;
 import model.GameData;
-
 import org.eclipse.jetty.websocket.api.Session;
 import service.exception.BadRequestException;
 import service.exception.UnauthorizedException;
@@ -79,7 +77,7 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
                 ));
     }
 
-    private void checkMoveForErrors(String username, GameData game, ChessMove move) throws  BadRequestException {
+    private void checkMoveForErrors(String username, GameData game, ChessMove move) throws BadRequestException {
         ChessGame chessGame = game.game();
 
         if (!username.equals(game.whiteUsername()) && (!username.equals(game.blackUsername()))) {
@@ -98,10 +96,38 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
 
     private void makeMove(Session session, String username, GameData game, ChessMove move)
         throws BadRequestException, DataAccessException, IOException {
-    }
+        // check for invalid cases
+        checkMoveForErrors(username, game, move);
+        ChessGame chessGame = game.game();
+        try {
+            chessGame.makeMove(move);
+        } catch (InvalidMoveException exception) {
+            throw new BadRequestException("that move is not legal.");
+        }
 
-    private void checkMoveLegal(String username, GameData game, ChessMove move)
-        throws BadRequestException {
+        // check for status updates
+        ChessGame.TeamColor teamTurn = chessGame.getTeamTurn();
+        String player = currentPlayer(game);
+        String statusText = null;
+        if (chessGame.isInCheckmate(teamTurn)) {
+            statusText = player + " is in checkmate. Game over.";
+            chessGame.setGameOver(true);
+        } else if (chessGame.isInStalemate(teamTurn)) {
+            statusText = "Stalemate. Game over.";
+            chessGame.setGameOver(true);
+        } else if (chessGame.isInCheck(teamTurn)) {
+            statusText = player + " is in check.";
+        }
+
+        // status updates
+        gameDAO.updateGame(game);
+        connections.broadcast(game.gameID(), loadGameMessage(chessGame));
+        connections.broadcastExcept(game.gameID(), session,
+                notificationMessage(username + " moved " + moveName(move) + ".")
+        );
+        if (statusText != null) {
+            connections.broadcast(game.gameID(), notificationMessage(statusText));
+        }
     }
 
     private String currentPlayer(GameData game) {
