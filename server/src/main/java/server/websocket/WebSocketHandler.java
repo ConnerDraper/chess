@@ -3,7 +3,6 @@ package server.websocket;
 import chess.ChessGame;
 import com.google.gson.Gson;
 import dataaccess.AuthDAO;
-import dataaccess.DataAccessException;
 import dataaccess.GameDAO;
 import io.javalin.websocket.*;
 import model.AuthData;
