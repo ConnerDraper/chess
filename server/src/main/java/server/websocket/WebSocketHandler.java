@@ -61,8 +61,7 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
             } else if (commandType == UserGameCommand.CommandType.RESIGN) {
                 resign(username, game);
             }
-        }
-        catch (Exception error) {
+        } catch (Exception error) {
             connections.send(session, errorMessage("Error: " + error.getMessage()));
         }
     }
@@ -86,8 +85,11 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
             throws DataAccessException, IOException {
         String whiteUsername = game.whiteUsername();
         String blackUsername = game.blackUsername();
-        if (username.equals(whiteUsername)) {whiteUsername = null;}
-        else if (username.equals(blackUsername)) {blackUsername = null;}
+        if (username.equals(whiteUsername)) {
+            whiteUsername = null;
+        } else if (username.equals(blackUsername)) {
+            blackUsername = null;
+        }
         gameDAO.updateGame(new GameData(game.gameID(), whiteUsername,
                 blackUsername, game.gameName(), game.game())
         );
@@ -128,7 +130,7 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
     }
 
     private void makeMove(Session session, String username, GameData game, ChessMove move)
-        throws BadRequestException, DataAccessException, IOException {
+            throws BadRequestException, DataAccessException, IOException {
         // check for invalid cases
         checkMoveForErrors(username, game, move);
         ChessGame chessGame = game.game();
