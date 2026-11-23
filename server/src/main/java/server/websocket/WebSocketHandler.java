@@ -87,13 +87,22 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
         throws BadRequestException {
     }
 
-    private String currentPlayer(GameData game) {return null;}
+    private String currentPlayer(GameData game) {
+        if (game.game().getTeamTurn() == ChessGame.TeamColor.WHITE) {
+            return game.whiteUsername();
+        }
+        return game.blackUsername();
+    }
 
     private String statusText(GameData game) {return null;}
 
-    private String moveName(ChessMove move) {return null;}
+    private String moveName(ChessMove move) {
+        return squareName(move.getStartPosition()) + " to " + squareName(move.getEndPosition());
+    }
 
-    private String squareName(ChessPosition position) {return null;}
+    private String squareName(ChessPosition position) {
+        return String.valueOf("abcdefgh".charAt(position.getColumn() - 1)) + position.getRow();
+    }
 
     private String roleName(String username, GameData game) {
         boolean isWhite = username.equals(game.whiteUsername());
