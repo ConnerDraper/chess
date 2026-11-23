@@ -56,14 +56,20 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
     }
 
     private ServerMessage loadGameMessage(ChessGame game) {
-        return null;
+        ServerMessage msg = new ServerMessage(ServerMessage.ServerMessageType.LOAD_GAME);
+        msg.setGame(game);
+        return msg;
     }
 
     private ServerMessage notificationMessage(String text) {
-        return null;
+        ServerMessage msg = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION);
+        msg.setMessage(text);
+        return msg;
     }
 
     private ServerMessage errorMessage(String text) {
-        return null;
+        ServerMessage msg = new ServerMessage(ServerMessage.ServerMessageType.ERROR);
+        msg.setErrorMessage(text);
+        return msg;
     }
 }
