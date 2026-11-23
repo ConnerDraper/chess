@@ -7,12 +7,12 @@ import dataaccess.DataAccessException;
 import dataaccess.GameDAO;
 import io.javalin.websocket.*;
 import model.GameData;
-
-import java.io.IOException;
 import org.eclipse.jetty.websocket.api.Session;
 import service.exception.BadRequestException;
 import service.exception.UnauthorizedException;
 import websocket.messages.ServerMessage;
+
+import java.io.IOException;
 
 public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsCloseHandler {
     private final Gson gson = new Gson();
@@ -30,6 +30,7 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
 
     @Override
     public void handleConnect(WsConnectContext context) {
+        context.enableAutomaticPings();
     }
 
     @Override
@@ -38,9 +39,16 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
 
     @Override
     public void handleClose(WsCloseContext context) {
+        connections.remove(context.session);
     }
 
     private void connect(Session session, String username, GameData game) throws IOException {
+        connections.add(game.gameID(), session);
+        connections.send(session, loadGameMessage(game.game()));
+        connections.broadcastExcept(game.gameID(), session,
+                notificationMessage(username +
+                        " has joined the game as " + roleName(username, game) + "."
+                ));
     }
 
     private String findUsername(String authToken) throws DataAccessException, UnauthorizedException {
@@ -57,8 +65,7 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
         if (isWhite) {
             if (isBlack) {
                 return "WHITE & BLACK";
-            }
-            else {
+            } else {
                 return "WHITE";
             }
         } else if (isBlack) {
