@@ -170,8 +170,6 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
         return game.blackUsername();
     }
 
-    private String statusText(GameData game) {return null;}
-
     private String moveName(ChessMove move) {
         return squareName(move.getStartPosition()) + " to " + squareName(move.getEndPosition());
     }
