@@ -9,6 +9,7 @@ import dataaccess.sql.SqlGameDAO;
 import dataaccess.sql.SqlUserDAO;
 
 import io.javalin.Javalin;
+import server.websocket.WebSocketHandler;
 import service.DataService;
 import service.GameService;
 import service.UserService;
@@ -40,6 +41,10 @@ public class Server {
         // handler
         Handler handler = new Handler(dataService, userService, gameService);
         registerRoutes(handler);
+
+        // web socket handler
+        WebSocketHandler webSocketHandler = new WebSocketHandler(authDAO, gameDAO);
+        registerWebSocket(webSocketHandler);
     }
 
     private void registerRoutes(Handler handler) {
@@ -50,6 +55,14 @@ public class Server {
         javalin.get("/game", handler::handleListGames);
         javalin.post("/game", handler::handleCreateGame);
         javalin.put("/game", handler::handleJoinGame);
+    }
+
+    private void registerWebSocket(WebSocketHandler webSocketHandler) {
+        javalin.ws("/ws", ws -> {
+            ws.onConnect(webSocketHandler);
+            ws.onMessage(webSocketHandler);
+            ws.onClose(webSocketHandler);
+        });
     }
 
     public int run(int desiredPort) {

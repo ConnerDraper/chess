@@ -5,9 +5,7 @@ import com.google.gson.Gson;
 import dataaccess.AuthDAO;
 import dataaccess.DataAccessException;
 import dataaccess.GameDAO;
-import io.javalin.websocket.WsCloseContext;
-import io.javalin.websocket.WsConnectContext;
-import io.javalin.websocket.WsMessageContext;
+import io.javalin.websocket.*;
 import model.GameData;
 
 import java.io.IOException;
@@ -16,7 +14,7 @@ import service.exception.BadRequestException;
 import service.exception.UnauthorizedException;
 import websocket.messages.ServerMessage;
 
-public class WebSocketHandler {
+public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsCloseHandler {
     private final Gson gson = new Gson();
     private final ConnectionManager connections = new ConnectionManager();
     private final AuthDAO authDAO;
@@ -30,12 +28,15 @@ public class WebSocketHandler {
         this.gameDAO = gameDAO;
     }
 
+    @Override
     public void handleConnect(WsConnectContext context) {
     }
 
+    @Override
     public void handleMessage(WsMessageContext context) throws IOException {
     }
 
+    @Override
     public void handleClose(WsCloseContext context) {
     }
 
