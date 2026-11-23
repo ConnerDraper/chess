@@ -6,10 +6,12 @@ import dataaccess.AuthDAO;
 import dataaccess.DataAccessException;
 import dataaccess.GameDAO;
 import io.javalin.websocket.*;
+import model.AuthData;
 import model.GameData;
 import org.eclipse.jetty.websocket.api.Session;
 import service.exception.BadRequestException;
 import service.exception.UnauthorizedException;
+import websocket.commands.UserGameCommand;
 import websocket.messages.ServerMessage;
 
 import java.io.IOException;
@@ -35,6 +37,13 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
 
     @Override
     public void handleMessage(WsMessageContext context) throws IOException {
+        Session session = context.session;
+        try {
+            ;
+        }
+        catch (Exception error) {
+            connections.send(session, errorMessage("Error: " + error.getMessage()));
+        }
     }
 
     @Override
