@@ -79,11 +79,28 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
                 ));
     }
 
+    private void checkMoveForErrors(String username, GameData game, ChessMove move) throws  BadRequestException {
+        ChessGame chessGame = game.game();
+
+        if (!username.equals(game.whiteUsername()) && (!username.equals(game.blackUsername()))) {
+            throw new BadRequestException("cannot make a move because you are an observer.");
+        } else if (chessGame.isGameOver()) {
+            throw new BadRequestException("the game is already over.");
+        } else if (!username.equals(currentPlayer(game))) {
+            throw new BadRequestException("it is not your turn.");
+        }
+
+        ChessPiece piece = chessGame.getBoard().getPiece(move.getStartPosition());
+        if (piece == null || piece.getTeamColor() != chessGame.getTeamTurn()) {
+            throw new BadRequestException("you can only move your own pieces.");
+        }
+    }
+
     private void makeMove(Session session, String username, GameData game, ChessMove move)
         throws BadRequestException, DataAccessException, IOException {
     }
 
-    private void checkMoveAllowed(String username, GameData game, ChessMove move)
+    private void checkMoveLegal(String username, GameData game, ChessMove move)
         throws BadRequestException {
     }
 
