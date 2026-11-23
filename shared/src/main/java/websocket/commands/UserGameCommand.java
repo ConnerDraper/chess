@@ -39,7 +39,7 @@ public class UserGameCommand {
         this.move = move;
     }
 
-    public ChessMove getMove(ChessMove move) {
+    public ChessMove getMove() {
         return this.move;
     }
 
