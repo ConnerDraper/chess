@@ -52,7 +52,20 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
     }
 
     private String roleName(String username, GameData game) {
-        return null;
+        boolean isWhite = username.equals(game.whiteUsername());
+        boolean isBlack = username.equals(game.blackUsername());
+        if (isWhite) {
+            if (isBlack) {
+                return "WHITE & BLACK";
+            }
+            else {
+                return "WHITE";
+            }
+        } else if (isBlack) {
+            return "BLACK";
+        } else {
+            return "OBSERVER";
+        }
     }
 
     private ServerMessage loadGameMessage(ChessGame game) {
