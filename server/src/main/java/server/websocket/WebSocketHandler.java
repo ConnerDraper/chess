@@ -94,7 +94,7 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
     private void checkMoveForErrors(String username, GameData game, ChessMove move) throws BadRequestException {
         ChessGame chessGame = game.game();
 
-        if (!username.equals(game.whiteUsername()) && (!username.equals(game.blackUsername()))) {
+        if (!isPlayer(username, game)) {
             throw new BadRequestException("cannot make a move because you are an observer.");
         } else if (chessGame.isGameOver()) {
             throw new BadRequestException("the game is already over.");
@@ -193,5 +193,11 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
         ServerMessage msg = new ServerMessage(ServerMessage.ServerMessageType.ERROR);
         msg.setErrorMessage(text);
         return msg;
+    }
+
+    private boolean isPlayer(String username, GameData game) {
+        boolean isWhite = username.equals(game.whiteUsername());
+        boolean isBlack = username.equals(game.blackUsername());
+        return isWhite || isBlack;
     }
 }
