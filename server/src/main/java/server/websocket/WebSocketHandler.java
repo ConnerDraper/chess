@@ -70,7 +70,8 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
         connections.remove(context.session);
     }
 
-    private void connect(Session session, String username, GameData game) throws IOException {
+    private void connect(Session session, String username, GameData game)
+            throws IOException {
         connections.add(game.gameID(), session);
         connections.send(session, loadGameMessage(game.game()));
         connections.broadcastExcept(game.gameID(), session,
@@ -79,7 +80,8 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
                 ));
     }
 
-    private void leave(Session session, String username, GameData game) throws DataAccessException, IOException {
+    private void leave(Session session, String username, GameData game)
+            throws DataAccessException, IOException {
         String whiteUsername = game.whiteUsername();
         String blackUsername = game.blackUsername();
         if (username.equals(whiteUsername)) {whiteUsername = null;}
@@ -91,7 +93,22 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
         connections.broadcast(game.gameID(), notificationMessage(username + " left the game."));
     }
 
-    private void checkMoveForErrors(String username, GameData game, ChessMove move) throws BadRequestException {
+    private void resign(String username, GameData game)
+            throws BadRequestException, DataAccessException, IOException {
+        ChessGame chessGame = game.game();
+        if (!isPlayer(username, game)) {
+            throw new BadRequestException("you cannot resign as an observer.");
+        } else if (chessGame.isGameOver()) {
+            throw new BadRequestException("the game is already over.");
+        }
+
+        chessGame.setGameOver(true);
+        gameDAO.updateGame(game);
+        connections.broadcast(game.gameID(), notificationMessage(username + " has resigned. Game over."));
+    }
+
+    private void checkMoveForErrors(String username, GameData game, ChessMove move)
+            throws BadRequestException {
         ChessGame chessGame = game.game();
 
         if (!isPlayer(username, game)) {
