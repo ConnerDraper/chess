@@ -58,6 +58,8 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
                 makeMove(session, username, game, command.getMove());
             } else if (commandType == UserGameCommand.CommandType.LEAVE) {
                 leave(session, username, game);
+            } else if (commandType == UserGameCommand.CommandType.RESIGN) {
+                resign(username, game);
             }
         }
         catch (Exception error) {
