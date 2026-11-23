@@ -74,14 +74,6 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
                 ));
     }
 
-    private String findUsername(String authToken) throws DataAccessException, UnauthorizedException {
-        return null;
-    }
-
-    private GameData findGame(Integer gameID) throws DataAccessException, BadRequestException {
-        return null;
-    }
-
     private String roleName(String username, GameData game) {
         boolean isWhite = username.equals(game.whiteUsername());
         boolean isBlack = username.equals(game.blackUsername());
