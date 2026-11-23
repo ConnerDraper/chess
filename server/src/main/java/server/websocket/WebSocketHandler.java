@@ -1,12 +1,15 @@
 package server.websocket;
 
-import chess.ChessGame;
+import chess.*;
+import dataaccess.DataAccessException;
+
 import com.google.gson.Gson;
 import dataaccess.AuthDAO;
 import dataaccess.GameDAO;
 import io.javalin.websocket.*;
 import model.AuthData;
 import model.GameData;
+
 import org.eclipse.jetty.websocket.api.Session;
 import service.exception.BadRequestException;
 import service.exception.UnauthorizedException;
@@ -50,8 +53,11 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
                 throw new BadRequestException("game does not exist");
             }
 
-            if (command.getCommandType() == UserGameCommand.CommandType.CONNECT) {
+            UserGameCommand.CommandType commandType = command.getCommandType();
+            if (commandType == UserGameCommand.CommandType.CONNECT) {
                 connect(session, username, game);
+            } else if (commandType == UserGameCommand.CommandType.MAKE_MOVE) {
+                makeMove(session, username, game, command.getMove());
             }
         }
         catch (Exception error) {
@@ -72,6 +78,22 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
                         " has joined the game as " + roleName(username, game) + "."
                 ));
     }
+
+    private void makeMove(Session session, String username, GameData game, ChessMove move)
+        throws BadRequestException, DataAccessException, IOException {
+    }
+
+    private void checkMoveAllowed(String username, GameData game, ChessMove move)
+        throws BadRequestException {
+    }
+
+    private String currentPlayer(GameData game) {return null;}
+
+    private String statusText(GameData game) {return null;}
+
+    private String moveName(ChessMove move) {return null;}
+
+    private String squareName(ChessPosition position) {return null;}
 
     private String roleName(String username, GameData game) {
         boolean isWhite = username.equals(game.whiteUsername());
