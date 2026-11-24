@@ -10,12 +10,18 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.List;
 
+import chess.ChessMove;
+import websocket.commands.UserGameCommand;
+
 public class ServerFacade {
     private final String url;
+    private final int port;
     private final HttpClient http = HttpClient.newHttpClient();
     private final Gson gson = new Gson();
+    private WebSocketCommunicator communicator = null;
 
     public ServerFacade(int port) {
+        this.port = port;
         url = "http://localhost:" + port;
     }
 
