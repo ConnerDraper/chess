@@ -88,6 +88,34 @@ public class ServerFacade {
         sendRequest("DELETE", "/db", null, null);
     }
 
+    public void connect(String authToken, int gameID, ServerMessageObserver observer) throws Exception {
+        communicator = new WebSocketCommunicator(port, observer);
+        sendCommand(new UserGameCommand(UserGameCommand.CommandType.CONNECT, authToken, gameID));
+    }
+
+    private void makeMove(String authToken, int gameID, ChessMove move) throws Exception {
+        UserGameCommand cmd = new UserGameCommand(UserGameCommand.CommandType.MAKE_MOVE, authToken, gameID);
+        cmd.setMove(move);
+        sendCommand(cmd);
+    }
+
+    private void resign(String authToken, int gameID) throws Exception {
+        sendCommand(new UserGameCommand(UserGameCommand.CommandType.RESIGN, authToken, gameID));
+    }
+
+    public void leave(String authToken, int gameID) throws Exception{
+        sendCommand(new UserGameCommand(UserGameCommand.CommandType.LEAVE, authToken, gameID));
+        communicator.close();
+        communicator = null;
+    }
+
+    private void sendCommand(UserGameCommand cmd) throws Exception {
+        if (communicator == null) {
+            throw new Exception("not currently connected to a game.");
+        }
+        communicator.sendCommand(cmd);
+    }
+
     private record ErrorMessage(String message) {
     }
 
