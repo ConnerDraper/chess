@@ -102,10 +102,9 @@ public class BoardRenderer {
 
     private static String squareColor(ChessPosition position, boolean isLight, Collection<ChessMove> highlights) {
         for (ChessMove move : highlights) {
-            if (move.getEndPosition().equals(position)) {
-                return SELECTED_SQUARE;
-            }
             if (move.getStartPosition().equals(position)) {
+                return SELECTED_SQUARE;
+            } else if (move.getEndPosition().equals(position)) {
                 if (isLight) {
                     return LIGHT_HIGHLIGHT;
                 }
