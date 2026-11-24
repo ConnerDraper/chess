@@ -33,7 +33,7 @@ public class GameplayRepl implements ServerMessageObserver {
     public void run() throws Exception {
     }
 
-    public void gameplayMenu(String command, String[] words) throws Exception {
+    private void gameplayMenu(String command, String[] words) throws Exception {
     }
 
     private void showHelp() {

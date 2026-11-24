@@ -93,13 +93,13 @@ public class ServerFacade {
         sendCommand(new UserGameCommand(UserGameCommand.CommandType.CONNECT, authToken, gameID));
     }
 
-    private void makeMove(String authToken, int gameID, ChessMove move) throws Exception {
+    public void makeMove(String authToken, int gameID, ChessMove move) throws Exception {
         UserGameCommand cmd = new UserGameCommand(UserGameCommand.CommandType.MAKE_MOVE, authToken, gameID);
         cmd.setMove(move);
         sendCommand(cmd);
     }
 
-    private void resign(String authToken, int gameID) throws Exception {
+    public void resign(String authToken, int gameID) throws Exception {
         sendCommand(new UserGameCommand(UserGameCommand.CommandType.RESIGN, authToken, gameID));
     }
 
