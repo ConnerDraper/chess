@@ -10,6 +10,7 @@ import websocket.messages.ServerMessage;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Locale;
 import java.util.Scanner;
 
 import static ui.EscapeSequences.*;
@@ -31,9 +32,54 @@ public class GameplayRepl implements ServerMessageObserver {
     }
 
     public void run() throws Exception {
+        facade.connect(authToken, game.gameID(), this);
+        boolean inGame = true;
+
+        while (inGame) {
+            printPrompt();
+            String line = scanner.next();
+            String[] words = line.trim().split("\\s+");
+            String command = words[0].toLowerCase();
+
+            if (command.equals("leave")) {
+                facade.leave(authToken, game.gameID());
+                System.out.println("You have left the game.");
+                inGame = false;
+            } else {
+                try {
+                    gameplayMenu(command, words);
+                } catch (Exception exception) {
+                    System.out.println("Lost connection to the server. Type 'leave' and join again.");
+                }
+            }
+        }
     }
 
     private void gameplayMenu(String command, String[] words) throws Exception {
+        if (command.equals("help") || command.equals("h")) {
+            showHelp();
+        } else if (command.equals("resign")) {
+            resign();
+        } else if (command.equals("highlight") || command.equals("hl")) {
+            highlight(words);
+        } else if (command.equals("move") || command.equals("m")) {
+            makeMove(words);
+        } else if (command.equals("redraw") || command.equals("r")) {
+            redraw();
+        } else{
+            System.out.println("Invalid command. Type 'help' to view commands.");
+        }
+    }
+
+    private void printPrompt() {
+        System.out.println(SET_TEXT_COLOR_MAGENTA + "chess [" + roleName() + "] >" + RESET_TEXT_COLOR);
+    }
+
+    private String roleName() {
+        if (color == null) {
+            return "observing";
+        }
+        return color.toLowerCase();
     }
 
     private void showHelp() {
@@ -60,13 +106,6 @@ public class GameplayRepl implements ServerMessageObserver {
     }
 
     private void printBoard(Collection<ChessMove> highlights) {
-    }
-
-    private void printPrompt() {
-    }
-
-    private String roleName() {
-        return null;
     }
 
     @Override
