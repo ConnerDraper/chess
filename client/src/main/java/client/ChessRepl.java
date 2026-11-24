@@ -1,9 +1,7 @@
 package client;
 
-import chess.ChessBoard;
 import model.AuthData;
 import model.GameData;
-import ui.BoardRenderer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -199,15 +197,18 @@ public class ChessRepl {
             return;
         }
 
-        facade.joinGame(authToken, color, game.gameID());
+        String seatOwner = game.blackUsername();
+        if (color.equals("WHITE")) {
+            seatOwner = game.whiteUsername();
+        }
+        if (!username.equals(seatOwner)) {
+            facade.joinGame(authToken, color, game.gameID());
+        }
 
-        ChessBoard board = new ChessBoard();
-        board.resetBoard();
-        printBoardTitle(game.gameName(), color);
-        BoardRenderer.drawBoard(board, color.equals("WHITE"));
+        enterGame(game, color);
     }
 
-    private void observeGame(String[] words) {
+    private void observeGame(String[] words) throws Exception {
         if (words.length != 2) {
             System.out.println("Error. Correct usage: observe <number>");
             return;
@@ -218,10 +219,13 @@ public class ChessRepl {
             return;
         }
 
-        ChessBoard board = new ChessBoard();
-        board.resetBoard();
-        printBoardTitle(game.gameName(), "observing");
-        BoardRenderer.drawBoard(board, true);
+        enterGame(game, null);
+    }
+
+    private void enterGame(GameData game, String color) throws Exception {
+        GameplayRepl gameplay = new GameplayRepl(facade, scanner, authToken, game, color);
+        gameplay.run();
+        printHint("You're back in the lobby. Type 'list' to see games.");
     }
 
     private GameData pickGame(String number) {
@@ -252,10 +256,6 @@ public class ChessRepl {
 
     private void printHint(String hint) {
         System.out.println(SET_TEXT_FAINT + "  " + hint + RESET_TEXT_BOLD_FAINT);
-    }
-
-    private void printBoardTitle(String gameName, String role) {
-        System.out.println(SET_TEXT_BOLD + "Game: " + gameName + " | You are " + role + RESET_TEXT_BOLD_FAINT);
     }
 
     private String friendlyError(String serverMessage) {
