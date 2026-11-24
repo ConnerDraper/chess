@@ -37,7 +37,7 @@ public class GameplayRepl implements ServerMessageObserver {
 
         while (inGame) {
             printPrompt();
-            String line = scanner.next();
+            String line = scanner.nextLine();
             String[] words = line.trim().split("\\s+");
             String command = words[0].toLowerCase();
 
