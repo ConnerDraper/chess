@@ -66,13 +66,13 @@ public class GameplayRepl implements ServerMessageObserver {
             makeMove(words);
         } else if (command.equals("redraw") || command.equals("r")) {
             redraw();
-        } else{
+        } else {
             System.out.println("Invalid command. Type 'help' to view commands.");
         }
     }
 
     private void printPrompt() {
-        System.out.println(SET_TEXT_COLOR_MAGENTA + "chess [" + roleName() + "] >" + RESET_TEXT_COLOR);
+        System.out.print(SET_TEXT_COLOR_MAGENTA + "chess [" + roleName() + "] >" + RESET_TEXT_COLOR);
     }
 
     private String roleName() {
